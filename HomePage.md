@@ -1,6 +1,6 @@
 <img src="https://coursesandconferences.wellcomeconnectingscience.org/wp-content/themes/wcc_courses_and_conferences/dist/assets/svg/logo.svg" width="300" height="50"> 
 
-# AScalable Genomics and Pangenomics
+# Scalable Genomics and Pangenomics
 
 [Wellcome Connecting Science GitHub Home Page](https://github.com/WCSCourses) <br /> 
 [Wellcome Connecting Science Website](https://coursesandconferences.wellcomeconnectingscience.org/event/scalable-genomics-and-pangenomics-20261011/)
