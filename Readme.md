@@ -3,9 +3,9 @@
 
 ### 11–16 October 2026, Wellcome Genome Campus, Hinxton
 
-[Wellcome Connecting Science Course Run Website](https://coursesandconferences.wellcomeconnectingscience.org/event/scalable-genomics-and-pangenomics-20261011/) <br /> 
+[Course Run Website](https://coursesandconferences.wellcomeconnectingscience.org/event/scalable-genomics-and-pangenomics-20261011/) <br /> 
 [Course Time Table 2026]() <br /> 
-[Course Informatics Guide](Add link here)
+[Course Informatics Guide](https://github.com/WCSCourses/Scalable_Genomics_and_Pangenomics_2026/blob/main/Course_InformaticsGuide.md)
 
 ### Summary
 
@@ -53,17 +53,17 @@ Friday: A group-based project session will provide an opportunity to apply the c
 
 - [Kamil Jaron](https://www.sanger.ac.uk/person/jaron-kamil/), Wellcome Sanger Institute, UK
 - [Katharine Jenike](https://www.linkedin.com/in/kmjenike/?originalSubdomain=uk%C3%A7), University of Cambridge, UK
-- [Richard Durbin](https://www.gen.cam.ac.uk/directory/richard-durbin), University of Cambridge, UK
 - [Antoine Limasset](https://scholar.google.fr/citations?hl=en&view_op=list_works&gmla=AKKJWFeyxopmWGd1i4475Iv_2eZIDq0JRB8R4AJPu87UtlQK8j1BUti4kyuZNNSQ64sPs0Sg3XFOBNZ6soUYwPxYGig-&user=EW4USK4AAAAJ), Université de Lille, France
 - [Vikram Shivkumar](https://scholar.google.com/citations?user=LiuMoYgAAAAJ&hl=en), Johns Hopkins University, USA
+- [Camila Duitama González](https://research.pasteur.fr/en/member/camila-duitama-gonzalez/)
+- [Richard Durbin](https://www.gen.cam.ac.uk/directory/richard-durbin), University of Cambridge, UK
 - [Eugene Myers](https://www.sanger.ac.uk/external_person/myers-gene/), Wellcome Sanger Institute, UK
 
 
-**Wellcome Connecting Science Team**
+**Innovation and Impact, Scientific Training and Events Team**
 
-- [Vaishnavi Vikas Gangadhar](https://www.wellcomeconnectingscience.org/person/gangadhar-vaishnavi/), Informatics Technical Officer
-- [Martin Aslett](https://coursesandconferences.wellcomeconnectingscience.org/about-us/the-team/), Informatics Manager
-- [Lucy Criddle](https://www.wellcomeconnectingscience.org/person/criddle-lucy/), Events Organiser
+- [Vaishnavi Vikas Gangadhar](https://www.wellcomeconnectingscience.org/person/gangadhar-vaishnavi/), Informatics Technical Developer
+- [Martin Aslett](https://coursesandconferences.wellcomeconnectingscience.org/about-us/the-team/), Informatics Training Lead
 
 ******
 
@@ -75,13 +75,13 @@ Each course landing page is assigned a DOI via Zenodo, providing a stable and ci
 
 ### Interested in attending a course?
 
-Take a look at what courses are coming up at [Wellcome Connecting Science Courses & Conference Website](https://coursesandconferences.wellcomeconnectingscience.org/our-events/).
+Take a look at what courses are coming up at [Courses & Conference Website](https://coursesandconferences.wellcomeconnectingscience.org/our-events/).
 
 ---
 
-For more information or queries, feel free to contact us via the [Wellcome Connecting Science website](https://coursesandconferences.wellcomeconnectingscience.org).<br /> 
-Find us on socials [Wellcome Connecting Science Linktr](https://linktr.ee/eventswcs)
+For more information or queries, feel free to contact us via the [Courses & Conference Website](https://coursesandconferences.wellcomeconnectingscience.org).<br /> 
+Find us on socials [Linktr](https://linktr.ee/eventswcs)
 
 ---
 
-[Wellcome Connecting Science GitHub Home Page](https://github.com/WCSCourses) <br /> 
+[GitHub Home Page](https://github.com/WCSCourses) <br /> 
