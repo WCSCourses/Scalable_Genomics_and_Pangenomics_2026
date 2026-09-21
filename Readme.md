@@ -54,7 +54,7 @@ Friday: A group-based project session will provide an opportunity to apply the c
 - [Kamil Jaron](https://www.sanger.ac.uk/person/jaron-kamil/), Wellcome Sanger Institute, UK
 - [Katharine Jenike](https://www.linkedin.com/in/kmjenike/?originalSubdomain=uk%C3%A7), University of Cambridge, UK
 - [Antoine Limasset](https://scholar.google.fr/citations?hl=en&view_op=list_works&gmla=AKKJWFeyxopmWGd1i4475Iv_2eZIDq0JRB8R4AJPu87UtlQK8j1BUti4kyuZNNSQ64sPs0Sg3XFOBNZ6soUYwPxYGig-&user=EW4USK4AAAAJ), Université de Lille, France
-- [Vikram Shivkumar](https://scholar.google.com/citations?user=LiuMoYgAAAAJ&hl=en), Johns Hopkins University, USA
+- [Vikram Shivakumar](https://vikshiv.github.io), EMBL-EBI / Wellcome Sanger Institute, UK
 - [Camila Duitama González](https://research.pasteur.fr/en/member/camila-duitama-gonzalez/), Postdoctoral Researcher, Institut Pasteur
 - [Richard Durbin](https://www.gen.cam.ac.uk/directory/richard-durbin), University of Cambridge, UK
 - [Eugene Myers](https://www.sanger.ac.uk/external_person/myers-gene/), Wellcome Sanger Institute, UK
