@@ -1,0 +1,43 @@
+name: scalable_course
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  # Core
+  - python=3.11
+  - pip
+  - make
+  - cmake
+  - cxx-compiler
+  - c-compiler
+  - zlib
+  - git
+  - wget
+  - curl
+  - llvm-openmp
+  # Runtime helpers (panagram + general)
+  - samtools
+  - htslib
+  - snakemake-minimal
+  - tabix
+  - minimap2=2.31  # PAFs for impg demos
+  # Bioconda course tools (pinned; versions as of 2026-09-17)
+  - agc=3.2.4
+  - ropebwt3=3.10
+  - mumemto=1.4.1
+  - shredtools=0.1.0
+  - impg=0.5.0
+  - bandage_ng=2026.9.1
+  # k-mer / assembly QC / sketching
+  # genomescope2: install from GitHub (bioconda 2.1.0 is py313-only)
+  - r-argparse
+  - r-minpack.lm
+  - r-jsonlite
+  - fastk=1.2
+  - merquryfk=1.2
+  - sourmash=4.9.4
+  # Gene Myers aligners (bioconda matches GitHub latest)
+  - fastga=1.5.20260729
+  - fastan=0.8
+  # pggb=0.7.4 is linux-64 only; installed in the Dockerfile for the course image
