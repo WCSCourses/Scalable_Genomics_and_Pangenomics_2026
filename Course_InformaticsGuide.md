@@ -13,9 +13,14 @@ Versions below match the course container image [`vikshiv/scalable-course:latest
 | mumemto | https://github.com/vikshiv/mumemto | 1.4.1 | Multi-MUM discovery across genomes |
 | shredtools | https://github.com/vikshiv/shredtools | 0.1.0 | Query and extract multi-MUMs from mumemto output |
 | impg | https://github.com/pangenome/impg | 0.5.0 | Interval mapping over all-vs-all PAF alignments |
-| PGGB | https://github.com/pangenome/pggb | 0.7.4 | PanGenome Graph Builder |
+| panacus | https://github.com/codialab/panacus | 0.5.3 | Pangenome graph / VCF counting statistics |
+| vg | https://github.com/vgteam/vg | 1.76.1 | Variation graphs; includes `vg giraffe` (linux/amd64 image only) |
+| GENESPACE | https://github.com/jtlovell/GENESPACE | 1.3.1 (`7561036`) | Synteny-constrained comparative genomics (R; needs OrthoFinder 2.5.5 + MCScanX) |
+| SVbyEye | https://github.com/daewoooo/SVbyEye | `5866e7f` | Visualize structural variation from PAF alignments (R) |
+| OrthoFinder | https://github.com/OrthoFinder/OrthoFinder | 2.5.5 | Orthology inference for GENESPACE (not 3.x) |
+| MCScanX | https://github.com/wyp1125/MCScanX | 1.0.0 | Collinearity scan (`MCScanX_h`) for GENESPACE |
 | Bandage NG | https://github.com/asl/BandageNG | 2026.9.1 | Visualisation of assembly / pangenome graphs |
-| minimap2 | https://github.com/lh3/minimap2 | 2.31 | Fast alignment (all-vs-all PAFs for impg / pggb) |
+| minimap2 | https://github.com/lh3/minimap2 | 2.31 | Fast alignment (all-vs-all PAFs for impg) |
 | GenomeScope2 | https://github.com/tbenavi1/genomescope2.0 | v2.1.0 | Estimates genome size, heterozygosity, and repeat content |
 | Smudgeplot | https://github.com/KamilSJaron/smudgeplot | v0.5.4 | Infers ploidy and genome structure using k-mer pairs |
 | FastK | https://github.com/thegenemyers/FASTK | 1.2 | High-performance k-mer counting toolkit |
@@ -61,7 +66,7 @@ apptainer shell \
 
 Use `singularity` in place of `apptainer` if that is what your cluster provides. Full recipes and smoke tests are in the course repository README.
 
-You can also install most of the tools with Conda/Mamba via [`environment.yml`](environment.yml) (`conda env create -f environment.yml`).
+You can also install most of the tools with Conda/Mamba via [`environment.yml`](environment.yml) (`conda env create -f environment.yml`). That env includes `panacus`, OrthoFinder 2.5.5, MCScanX, and the R dependencies for GENESPACE / SVbyEye. The course image additionally installs `vg` (linux-only), GENESPACE, and SVbyEye.
 
 ## Informatics Solutions
 
