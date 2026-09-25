@@ -30,7 +30,7 @@ The Training Team will support you with either setup option.
 
 > **Important:** Regardless of which setup option you choose, you must download and install ALNview separately. ALNview is a graphical alignment viewer and is not included in the course Docker environment.
 
-## Installing ALNview 
+## Installing ALNview (needs to be installed irrespective of informatics option)
 
 ALNview is a graphical alignment viewer for `.1aln` files. It must be installed separately, regardless of whether you use Docker or install the course software individually.
 
@@ -161,3 +161,8 @@ apptainer shell \
 | AWS CLI | https://aws.amazon.com/cli/ | Latest | Command-line tool for interacting with AWS services, used for downloading datasets |
 
 ---
+
+If you have questions about your computer’s compatibility, please post your query in the [Questions and Comments section](https://lms.sanger.ac.uk/mod/forum/view.php?id=12430), and a member of the Training Team will respond.
+
+---
+
