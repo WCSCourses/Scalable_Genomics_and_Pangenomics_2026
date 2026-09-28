@@ -18,8 +18,6 @@ In this practical you will:
 
 1. Run each tool on a small set of genome assemblies
 2. Understand the inputs and outputs of each method
-3. Explore how to visualize the outputs for pangenome exploration
-4. Learn what types of queries each type of pangenome index is suitable for
 
 ---
 
@@ -72,8 +70,7 @@ mkdir -p "$OUT" "$FASTA_DIR"
 
 Task: Inspect the AGC archive and decompress it into a set of FASTA files for the downstream tools.
 
-<details>
-<summary>Show agc example command</summary>
+Show agc example command
 
 ```bash
 agc info "$AGC"
@@ -82,7 +79,7 @@ agc getcol -o "$FASTA_DIR" "$AGC"
 ls "$FASTA_DIR" | head
 ```
 
-</details>
+
 
 Inputs: an AGC archive (`.agc`)
 
@@ -98,57 +95,52 @@ Outputs: a directory of FASTA files (one file per sample)
 
 Task: run Mumemto on the set of assemblies to create a `bumbl` file containing the MUMs. Then filter and index the set of MUMs for querying.
 
-<details>
-<summary>Show mumemto example command</summary>
+Show mumemto example command
 
 ```bash
 mumemto -o "$OUT/mumemto" -b "$FASTA_DIR"/*.fa
 ```
 
-</details>
 
-<details>
-<summary>Show shredtools example command</summary>
+
+Show shredtools example command
 
 ```bash
 shredtools filter -i "$OUT/mumemto.bumbl"
 shredtools index --multi "$OUT/mumemto.bumbl" -v
 ```
 
-</details>
+
 
 Inputs: a set of FASTA files
 
 Outputs: a `bumbl` file, a binary file that contains a list of exact matches and their locations in each assembly
 
-<details>
-<summary>How to view the output <code>bumbl</code> file</summary>
+How to view the output `bumbl` file
 
 ```bash
 mumemto view $OUT/mumemto.bumbl | less
 ```
 
-</details>
+
 
 Extra exercises:
 
-<details>
-<summary>Compute the coverage of MUMs (how much of a given assembly is “shared” and unique across the pangenome?)</summary>
+Compute the coverage of MUMs (how much of a given assembly is “shared” and unique across the pangenome?)
 
 ```bash
 mumemto coverage -i $OUT/mumemto.bumbl
 ```
 
-</details>
 
-<details>
-<summary>Compute the average MUM length</summary>
+
+Compute the average MUM length
 
 ```bash
 mumemto view "$OUT/mumemto.bumbl" | awk '{s+=$1;n++} END{print n?s/n:0}'
 ```
 
-</details>
+
 
 ---
 
@@ -160,8 +152,7 @@ mumemto view "$OUT/mumemto.bumbl" | awk '{s+=$1;n++} END{print n?s/n:0}'
 
 Task: Build an FM-index over the set of assemblies (dynamic `.fmr`, then static `.fmd`).
 
-<details>
-<summary>Show ropebwt3 example command</summary>
+Show ropebwt3 example command
 
 ```bash
 # constructs the dynamic version, needed initially to build the index
@@ -170,11 +161,21 @@ ropebwt3 build -bo "$OUT/rb3.fmr" "$FASTA_DIR"/*.fa
 ropebwt3 build -i "$OUT/rb3.fmr" -do "$OUT/rb3.fmd"
 ```
 
-</details>
+
 
 Inputs: a set of FASTA files
 
 Outputs: a dynamic BWT (`.fmr`) and a static FM-index (`.fmd`)
+
+Extra exercise:
+
+Compute the size of the BWT
+
+```bash
+ropebwt3 stat "$OUT/rb3.fmd"
+```
+
+
 
 ---
 
@@ -186,15 +187,14 @@ Outputs: a dynamic BWT (`.fmr`) and a static FM-index (`.fmd`)
 
 Task: Build a syncmer path graph of the assemblies, then convert the paths into a GBWT for querying.
 
-<details>
-<summary>Show syng example command</summary>
+Show syng example command
 
 ```bash
 syng -o "$OUT/syng" -writeK -writePath "$FASTA_DIR"/*.fa
 syngpath2gbwt "$OUT/syng.1path" "$OUT/syng.1gbwt"
 ```
 
-</details>
+
 
 Inputs: a set of FASTA files
 
@@ -210,8 +210,7 @@ Outputs: syng path / kmer files (e.g. `.1path`) and a GBWT (`.1gbwt`)
 
 Task: Build a panagram samples table and k-mer index for interactive exploration of presence/absence patterns.
 
-<details>
-<summary>Show panagram example command</summary>
+Show panagram example command
 
 ```bash
 PAN_DIR=$OUT/panagram
@@ -232,7 +231,7 @@ panagram index samples.tsv -k 21 --prepare
 snakemake --cores 1 all
 ```
 
-</details>
+
 
 Inputs: a `samples.tsv` listing FASTA paths (and optional annotations)
 
@@ -248,15 +247,14 @@ Outputs: a panagram index directory for interactive visualisation
 
 Task: Index the pairwise alignments. Build a graph from of the HLA region across the set of human genomes.
 
-<details>
-<summary>Show impg example command TODO</summary>
+Show impg example command TODO
 
 ```bash
 impg index -p "$OUT/all.paf" -i "$OUT/all.impg"
 impg graph
 ```
 
-</details>
+
 
 Inputs: all-vs-all pairwise alignments (PAF) and the corresponding FASTA sequences
 
@@ -272,14 +270,13 @@ vg is a toolkit to manipulate variation graphs (such as those produced by impg o
 
 Task: Build a `vg giraffe` index from a GFA (e.g. the HLA graph from impg).
 
-<details>
-<summary>Show vg example command TODO</summary>
+Show vg example command TODO
 
 ```bash
 vg index -z "$OUT/yeast.vg"
 ```
 
-</details>
+
 
 Inputs: a variation graph in GFA format
 
