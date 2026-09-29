@@ -70,7 +70,8 @@ mkdir -p "$OUT" "$FASTA_DIR"
 
 Task: Inspect the AGC archive and decompress it into a set of FASTA files for the downstream tools.
 
-Show agc example command
+<details>
+<summary>Show agc example command</summary>
 
 ```bash
 agc info "$AGC"
@@ -79,7 +80,7 @@ agc getcol -o "$FASTA_DIR" "$AGC"
 ls "$FASTA_DIR" | head
 ```
 
-
+</details>
 
 Inputs: an AGC archive (`.agc`)
 
@@ -95,52 +96,57 @@ Outputs: a directory of FASTA files (one file per sample)
 
 Task: run Mumemto on the set of assemblies to create a `bumbl` file containing the MUMs. Then filter and index the set of MUMs for querying.
 
-Show mumemto example command
+<details>
+<summary>Show mumemto example command</summary>
 
 ```bash
 mumemto -o "$OUT/mumemto" -b "$FASTA_DIR"/*.fa
 ```
 
+</details>
 
-
-Show shredtools example command
+<details>
+<summary>Show shredtools example command</summary>
 
 ```bash
 shredtools filter -i "$OUT/mumemto.bumbl"
 shredtools index --multi "$OUT/mumemto.bumbl" -v
 ```
 
-
+</details>
 
 Inputs: a set of FASTA files
 
 Outputs: a `bumbl` file, a binary file that contains a list of exact matches and their locations in each assembly
 
-How to view the output `bumbl` file
+<details>
+<summary>How to view the output <code>bumbl</code> file</summary>
 
 ```bash
 mumemto view $OUT/mumemto.bumbl | less
 ```
 
-
+</details>
 
 Extra exercises:
 
-Compute the coverage of MUMs (how much of a given assembly is “shared” and unique across the pangenome?)
+<details>
+<summary>Compute the coverage of MUMs (how much of a given assembly is “shared” and unique across the pangenome?)</summary>
 
 ```bash
 mumemto coverage -i $OUT/mumemto.bumbl
 ```
 
+</details>
 
-
-Compute the average MUM length
+<details>
+<summary>Compute the average MUM length</summary>
 
 ```bash
 mumemto view "$OUT/mumemto.bumbl" | awk '{s+=$1;n++} END{print n?s/n:0}'
 ```
 
-
+</details>
 
 ---
 
@@ -152,7 +158,8 @@ mumemto view "$OUT/mumemto.bumbl" | awk '{s+=$1;n++} END{print n?s/n:0}'
 
 Task: Build an FM-index over the set of assemblies (dynamic `.fmr`, then static `.fmd`).
 
-Show ropebwt3 example command
+<details>
+<summary>Show ropebwt3 example command</summary>
 
 ```bash
 # constructs the dynamic version, needed initially to build the index
@@ -161,7 +168,7 @@ ropebwt3 build -bo "$OUT/rb3.fmr" "$FASTA_DIR"/*.fa
 ropebwt3 build -i "$OUT/rb3.fmr" -do "$OUT/rb3.fmd"
 ```
 
-
+</details>
 
 Inputs: a set of FASTA files
 
@@ -187,14 +194,15 @@ ropebwt3 stat "$OUT/rb3.fmd"
 
 Task: Build a syncmer path graph of the assemblies, then convert the paths into a GBWT for querying.
 
-Show syng example command
+<details>
+<summary>Show syng example command</summary>
 
 ```bash
 syng -o "$OUT/syng" -writeK -writePath "$FASTA_DIR"/*.fa
 syngpath2gbwt "$OUT/syng.1path" "$OUT/syng.1gbwt"
 ```
 
-
+</details>
 
 Inputs: a set of FASTA files
 
@@ -210,7 +218,8 @@ Outputs: syng path / kmer files (e.g. `.1path`) and a GBWT (`.1gbwt`)
 
 Task: Build a panagram samples table and k-mer index for interactive exploration of presence/absence patterns.
 
-Show panagram example command
+<details>
+<summary>Show panagram example command</summary>
 
 ```bash
 PAN_DIR=$OUT/panagram
@@ -231,7 +240,7 @@ panagram index samples.tsv -k 21 --prepare
 snakemake --cores 1 all
 ```
 
-
+</details>
 
 Inputs: a `samples.tsv` listing FASTA paths (and optional annotations)
 
@@ -246,10 +255,12 @@ Outputs: a panagram index directory for interactive visualisation
 [impg](https://github.com/pangenome/impg) indexes and enables querying of genomic intervals across a pangenome using all-vs-all pairwise genome alignments. Running all pairs alignments is slow without a multi-CPU machine, so for this step we provide pre-computed alignments.
 
 TODO: finalize HLA contig names / coords for the provided human dataset
+TODO: include the runtime and memory for a real world example for anything we pre-bake
 
 Task: Index the pairwise alignments. Build a graph from of the HLA region across the set of human genomes.
 
-Show impg example command
+<details>
+<summary>Show impg example command</summary>
 
 ```bash
 impg index -a "$OUT/all.paf" -i "$OUT/all.impg"
@@ -257,7 +268,7 @@ impg index -a "$OUT/all.paf" -i "$OUT/all.impg"
 impg query -i "$OUT/all.impg" -a "$OUT/all.paf" -r "SAMPLE#1#chr6:28510120-33480577" -d 1000 -x -o gfa --sequence-files "$OUT/all.fa" -O "$OUT/hla"
 ```
 
-
+</details>
 
 Inputs: all-vs-all pairwise alignments (PAF) and the corresponding FASTA sequences
 
@@ -273,13 +284,14 @@ Outputs: an `.impg` index and a GFA graph for the queried region
 
 Task: Build a `vg giraffe` index from a GFA (e.g. the HLA graph from impg).
 
-Show vg example command
+<details>
+<summary>Show vg example command</summary>
 
 ```bash
 vg autoindex --workflow giraffe -g "$OUT/hla.gfa" -p "$OUT/hla"
 ```
 
-
+</details>
 
 Inputs: a variation graph in GFA format
 
@@ -291,17 +303,18 @@ Outputs: Giraffe indexes (e.g. `.giraffe.gbz`, `.dist`, and minimizer / zipcode 
 
 ### panacus
 
-[panacus](https://github.com/codialab/panacus) computes coverage and growth statistics over a pangenome graph (GFA).
+[panacus](https://github.com/codialab/panacus) computes coverage and growth statistics over a pangenome graph (GFA). This is useful for determining how much of the pangenome is core vs accessory based on the multiple alignment encoded in the graph topology.
 
 Task: Summarize node coverage and pangenome growth for the HLA graph from impg.
 
-Show panacus example command
+<details>
+<summary>Show panacus example command</summary>
 
 ```bash
 panacus histgrowth "$OUT/hla.gfa" > "$OUT/hla.histgrowth.tsv"
 ```
 
-
+</details>
 
 Inputs: a variation graph in GFA format
 
