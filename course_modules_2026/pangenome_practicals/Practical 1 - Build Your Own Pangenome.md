@@ -245,13 +245,16 @@ Outputs: a panagram index directory for interactive visualisation
 
 [impg](https://github.com/pangenome/impg) indexes and enables querying of genomic intervals across a pangenome using all-vs-all pairwise genome alignments. Running all pairs alignments is slow without a multi-CPU machine, so for this step we provide pre-computed alignments.
 
+TODO: finalize HLA contig names / coords for the provided human dataset
+
 Task: Index the pairwise alignments. Build a graph from of the HLA region across the set of human genomes.
 
-Show impg example command TODO
+Show impg example command
 
 ```bash
-impg index -p "$OUT/all.paf" -i "$OUT/all.impg"
-impg graph
+impg index -a "$OUT/all.paf" -i "$OUT/all.impg"
+# replace contig/coords with names from your human FASTA headers (HLA / MHC region)
+impg query -i "$OUT/all.impg" -a "$OUT/all.paf" -r "SAMPLE#1#chr6:28510120-33480577" -d 1000 -x -o gfa --sequence-files "$OUT/all.fa" -O "$OUT/hla"
 ```
 
 
@@ -266,14 +269,14 @@ Outputs: an `.impg` index and a GFA graph for the queried region
 
 ### vg
 
-vg is a toolkit to manipulate variation graphs (such as those produced by impg or [minigraph-cactus](https://github.com/ComparativeGenomicsToolkit/cactus/blob/master/doc/pangenome.md)). Here we build a Giraffe index for read mapping from a variation graph.
+[vg](https://github.com/vgteam/vg) is a toolkit to manipulate variation graphs (such as those produced by impg or [minigraph-cactus](https://github.com/ComparativeGenomicsToolkit/cactus/blob/master/doc/pangenome.md)). Here we build a Giraffe index for read mapping from a variation graph.
 
 Task: Build a `vg giraffe` index from a GFA (e.g. the HLA graph from impg).
 
-Show vg example command TODO
+Show vg example command
 
 ```bash
-vg index -z "$OUT/yeast.vg"
+vg autoindex --workflow giraffe -g "$OUT/hla.gfa" -p "$OUT/hla"
 ```
 
 
@@ -281,3 +284,25 @@ vg index -z "$OUT/yeast.vg"
 Inputs: a variation graph in GFA format
 
 Outputs: Giraffe indexes (e.g. `.giraffe.gbz`, `.dist`, and minimizer / zipcode files)
+
+---
+
+
+
+### panacus
+
+[panacus](https://github.com/codialab/panacus) computes coverage and growth statistics over a pangenome graph (GFA).
+
+Task: Summarize node coverage and pangenome growth for the HLA graph from impg.
+
+Show panacus example command
+
+```bash
+panacus histgrowth "$OUT/hla.gfa" > "$OUT/hla.histgrowth.tsv"
+```
+
+
+
+Inputs: a variation graph in GFA format
+
+Outputs: a table of histogram / growth statistics (TSV)

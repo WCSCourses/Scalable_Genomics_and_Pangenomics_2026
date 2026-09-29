@@ -90,5 +90,51 @@ ropebwt3 hapdiv "$OUT/rb3.fmd" "$DATA/assembly.fa" > "$ANALYSIS_DIR/hapdiv.txt"
 ```
 </details>
 
+### Syng
+TODO: get reads (same read set as ropebwt3)
+
+We previously built a syncmer dictionary (`.1khash`) and GBWT (`.1gbwt`) with syng. Analogous to ropebwt3's MEMs over bases, `syngmap` finds MEMs over syncmers between a query read set and the pangenome GBWT.
+
+<details>
+<summary>Show syngmap command</summary>
+```bash
+syngmap -o "$ANALYSIS_DIR/syngmap" -outputIds "$OUT/syng.1khash" "$OUT/syng.1gbwt" "$DATA/reads.fa"
+```
+</details>
+
+### impg / BandageNG
+TODO: finalize Arabidopsis PAF / sequence files for the FLC region
+TODO: fix to be one command to make graph w/o re-running alignments
+
+We can project the same FLC gene region through the all-vs-all alignments, extract the homologous sequences across the pangenome, build a local variation graph with `impg graph`, and visualise it with BandageNG.
+
+<details>
+<summary>Show impg extract + graph commands</summary>
+```bash
+impg query -i "$OUT/all.impg" -a "$OUT/all.paf" -r "CP138175.1:3173000-3179000" -d 1000 -x -o fasta --sequence-files "$DATA/assemblies.fa" -O "$ANALYSIS_DIR/flc_impg"
+impg graph --sequence-files "$ANALYSIS_DIR/flc_impg.fa" -g "$ANALYSIS_DIR/flc.gfa"
+```
+</details>
+
+<details>
+<summary>Show BandageNG command</summary>
+```bash
+BandageNG image "$ANALYSIS_DIR/flc.gfa" "$ANALYSIS_DIR/flc.png"
+```
+</details>
+
+### vg giraffe
+TODO: get short reads matching the Practical 1 HLA graph
+
+Using the Giraffe indexes built in Practical 1, map a set of reads to the HLA variation graph with `vg giraffe`.
+
+<details>
+<summary>Show vg giraffe command</summary>
+```bash
+vg giraffe -Z "$OUT/hla.giraffe.gbz" -d "$OUT/hla.dist" -m "$OUT/hla.min" -f "$DATA/reads.fa" > "$ANALYSIS_DIR/reads.gam"
+```
+</details>
+
+TODO: compare to aligning to a single reference
 
 
