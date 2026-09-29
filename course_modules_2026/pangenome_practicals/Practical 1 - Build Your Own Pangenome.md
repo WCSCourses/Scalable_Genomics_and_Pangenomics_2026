@@ -298,24 +298,3 @@ Inputs: a variation graph in GFA format
 Outputs: Giraffe indexes (e.g. `.giraffe.gbz`, `.dist`, and minimizer / zipcode files)
 
 ---
-
-
-
-### panacus
-
-[panacus](https://github.com/codialab/panacus) computes coverage and growth statistics over a pangenome graph (GFA). This is useful for determining how much of the pangenome is core vs accessory based on the multiple alignment encoded in the graph topology.
-
-Task: Summarize node coverage and pangenome growth for the HLA graph from impg.
-
-<details>
-<summary>Show panacus example command</summary>
-
-```bash
-panacus histgrowth "$OUT/hla.gfa" > "$OUT/hla.histgrowth.tsv"
-```
-
-</details>
-
-Inputs: a variation graph in GFA format
-
-Outputs: a table of histogram / growth statistics (TSV)
