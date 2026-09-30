@@ -65,7 +65,8 @@ Inside the container, AGCs are under `/data/datasets`, pre-built outputs under `
 
 ```bash
 # core (always)
-tar -xzf datasets_agc.tar.gz
+mkdir -p datasets
+tar -xzf datasets_agc.tar.gz -C datasets
 tar -xzf course_data.tar.gz
 
 # optional — only if you want the large all-vs-all PAFs
@@ -138,7 +139,7 @@ ls "$PAN_DIR/FASTAS" | head
 
 We've computed the set of multi-MUMs across the pangenome. In general for useful downstream analysis, we want the multi-MUM coverage to be >50% across the collection. Lower coverage likely indicates more dissimilar assemblies or high repeat content.
 
-First, we will visualize the multi-MUM synteny of *A. thaliana* genomes. Since each assembly has the same number of contigs, we can split the visualization by chromosome using `shredtools viz --mode gapped`.
+First, we will visualize the multi-MUM synteny of *A. thaliana* genomes. Since each assembly has the same number of contigs, we can split the visualization by chromosome using `mumemto viz --mode gapped`.
 
 Show mumemto command
 
@@ -148,12 +149,12 @@ mumemto viz -o "$ANALYSIS_DIR/mumemto.pdf" -i "$ATH_OUT/mumemto/mumemto" --mode 
 
 
 
-Next, we can query a region of interest and extract syntenic regions across the pangenome using `shredtools extract`. For this exercise, we will extract the FLC gene involved in flowering using the following region: `chr5:3,173,000–3,179,000`.
+Next, we can query a region of interest and extract syntenic regions across the pangenome using `shredtools extract`. For this exercise, we will extract the FLC gene involved in flowering using the following region: `chr5:3,173,000–3,179,000`. Precomputed outputs live under `$ATH_OUT/mumemto/` (`mumemto.bumbl`, `mumemto.bumbl.bi`, `mumemto.lengths`).
 
 Show shredtools command
 
 ```bash
-shredtools extract -o "$ANALYSIS_DIR/flc" -s 0 -r CP138175.1:3173000-3179000 --plot "$ATH_OUT/shredtools/mumemto.bumbl"
+shredtools extract -o "$ANALYSIS_DIR/flc" -s 0 -r CP138175.1:3173000-3179000 --plot "$ATH_OUT/mumemto/mumemto.bumbl"
 ```
 
 
@@ -174,12 +175,14 @@ ropebwt3 mem "$ATH_OUT/ropebwt3/rb3.fmd" "$DATA/athaliana/reads/tanz1_1k.fq" > "
 
 Next, we can query an assembly against the index and compute kmer diversity with respect to the pangenome. This is helpful to identify regions that are highly similar or dissimilar in a query assembly with respect to the population. For this, we can use the `ropebwt3 hapdiv` command.
 
-We've held out the Tanz-1 assembly from the pangenome (`$DATA/athaliana/holdout/Tanz-1.fa`). Use this as the query assembly.
+We've held out Tanz-1 from the ropebwt3 index (`$DATA/athaliana/holdout/Tanz-1.fa`), but it is included in the mumemto collection so we can recover its FLC locus from the BED produced above. Pull that sequence with `shredtools fasta`, then run `hapdiv` on the short FLC FASTA (querying the full Tanz-1 genome is slow on a laptop).
 
 Show ropebwt3 hapdiv command
 
 ```bash
-ropebwt3 hapdiv "$ATH_OUT/ropebwt3/rb3.fmd" "$DATA/athaliana/holdout/Tanz-1.fa" > "$ANALYSIS_DIR/hapdiv.txt"
+grep Tanz-1 "$ANALYSIS_DIR/flc.bed" > "$ANALYSIS_DIR/flc_tanz.bed"
+shredtools fasta -o "$ANALYSIS_DIR/flc_fa" "$ANALYSIS_DIR/flc_tanz.bed"
+ropebwt3 hapdiv "$ATH_OUT/ropebwt3/rb3.fmd" "$ANALYSIS_DIR/flc_fa/"*extract*.fa > "$ANALYSIS_DIR/hapdiv.txt"
 ```
 
 
@@ -217,7 +220,7 @@ Task: Query the FLC region (`CP138175.1:3173000-3179000`) from the *A. thaliana*
 Show impg command
 
 ```bash
-impg query -i "$DATA/athaliana/all.impg" -a "$DATA/athaliana/alignments.paf.gz" -r "CP138175.1:3173000-3179000" -d 1000 -x -o gfa --sequence-files "$FASTA_DIR/*.fa" -O "$ANALYSIS_DIR/flc"
+impg query -i "$DATA/athaliana/all.impg" -a "$DATA/athaliana/alignments.paf.gz" -r "CP138175.1:3173000-3179000" -d 1000 -x -o gfa --sequence-files "$FASTA_DIR"/*.fa -O "$ANALYSIS_DIR/flc"
 ```
 
 
@@ -283,20 +286,29 @@ In Practical 1 we built two Giraffe indexes for the MHC region (also provided un
 
 Task: Align the provided human HiFi long reads with `vg giraffe` against **both** indexes and compare the resulting alignments.
 
-Show solution
+<details>
+<summary>Show solution</summary>
 
 ```bash
-# map against the 5-haplotype MHC graph
-vg giraffe -Z "$DATA/human/vg_giraffe/mhc/mhc.giraffe.gbz" -d "$DATA/human/vg_giraffe/mhc/mhc.dist" -m "$DATA/human/vg_giraffe/mhc/mhc.min" \
+# map against the 5-haplotype MHC graph (long-read indexes + hifi preset)
+vg giraffe -b hifi \
+  -Z "$DATA/human/vg_giraffe/mhc/mhc.giraffe.gbz" \
+  -d "$DATA/human/vg_giraffe/mhc/mhc.dist" \
+  -m "$DATA/human/vg_giraffe/mhc/mhc.longread.withzip.min" \
+  -z "$DATA/human/vg_giraffe/mhc/mhc.longread.zipcodes" \
   -f "$DATA/human/reads/i002c_mhc_1k.fa" > "$ANALYSIS_DIR/reads.mhc.gam"
 
 # map against the linear CHM13 MHC index
-vg giraffe -Z "$DATA/human/vg_giraffe/mhc_chm13/mhc_chm13.giraffe.gbz" -d "$DATA/human/vg_giraffe/mhc_chm13/mhc_chm13.dist" -m "$DATA/human/vg_giraffe/mhc_chm13/mhc_chm13.min" \
+vg giraffe -b hifi \
+  -Z "$DATA/human/vg_giraffe/mhc_chm13/mhc_chm13.giraffe.gbz" \
+  -d "$DATA/human/vg_giraffe/mhc_chm13/mhc_chm13.dist" \
+  -m "$DATA/human/vg_giraffe/mhc_chm13/mhc_chm13.longread.withzip.min" \
+  -z "$DATA/human/vg_giraffe/mhc_chm13/mhc_chm13.longread.zipcodes" \
   -f "$DATA/human/reads/i002c_mhc_1k.fa" > "$ANALYSIS_DIR/reads.mhc_chm13.gam"
 ```
 
+</details>
 
-
-Inputs: Giraffe indexes from Practical 1 and long HiFi reads
+Inputs: long-read Giraffe indexes from Practical 1 (`lr-giraffe`) and long HiFi reads
 
 Outputs: GAM alignments for each index

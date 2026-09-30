@@ -43,14 +43,25 @@ Building the MHC variation graph with `impg query` over the **5** human genomes 
 
 ---
 
-## Pre-built *A. thaliana* datasets runtimes (`data/athaliana`)
+## Pre-built *A. thaliana* datasets (`data/athaliana`)
 
-The indexes and alignments in `data/athaliana/tool_outputs/` and `data/athaliana/alignments.paf.gz` were built using **68** assemblies (Tanz-1 held out), using **48 threads** on the EBI codon cluster. The following are runtimes and memory usage stats for each tool for reference.
+Layout under `data/athaliana/tool_outputs/`:
+
+| Directory | Files |
+| --------- | ----- |
+| `mumemto/` | `mumemto.bumbl`, `mumemto.bumbl.bi`, `mumemto.lengths` |
+| `ropebwt3/` | `rb3.fmd`, `rb3.fmr` |
+| `syng/` | `syng.1gbwt`, `syng.1khash`, `syng.1path` |
+| `panagram/` | panagram run dir without `kmc/` or `FASTAS/` (stage FASTAs from `athaliana_all.agc`) |
+
+Practical 2 points mumemto viz / shredtools extract at `$ATH_OUT/mumemto/…`.
+
+The mumemto collection includes **69** assemblies (Tanz-1 merged in for locus extraction). The ropebwt3 / syng / panagram / impg builds used **68** assemblies with Tanz-1 held out. Runtimes below used **48 threads** on the EBI codon cluster.
 
 
 | Tool / step           | Wall time                | Approx. memory                                | Notes                                             |
 | --------------------- | ------------------------ | --------------------------------------------- | ------------------------------------------------- |
-| mumemto + shredtools  | **23 min**               | **~25 GB / batch** (~150 GB if 8 run at once) | 8 parallel batches, one CPU per batch                     |
+| mumemto + shredtools  | **23 min**               | **~25 GB / batch** (~150 GB if 8 run at once) | 8 parallel batches, one CPU per batch; index → `.bumbl.bi` |
 | ropebwt3              | **43 min**               | **~4 GB**                                     | `build` → `.fmr` / `.fmd`                         |
 | syng + syngpath2gbwt  | **6.7 min**              | **~3 GB**                                     | syncmer dict + GBWT                               |
 | panagram              | **10 min**               | **~10 GB**                                    | prepare + snakemake                               |

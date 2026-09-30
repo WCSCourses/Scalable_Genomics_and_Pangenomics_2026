@@ -288,7 +288,7 @@ Outputs: a panagram index directory for interactive visualisation
 <summary>Show impg align example command</summary>
 
 ```bash
-impg align --sequence-files "$FASTA_DIR/*.fa" --temp-dir "$OUT/work" -o "$OUT/alignments" --format paf --aligner wfmash
+impg align --sequence-files "$FASTA_DIR"/*.fa --temp-dir "$OUT/work" -o "$OUT/alignments" --format paf --aligner wfmash
 impg index -a "$OUT/alignments/alignments.paf" -i "$OUT/alignments.impg"
 ```
 
@@ -296,11 +296,20 @@ impg index -a "$OUT/alignments/alignments.paf" -i "$OUT/alignments.impg"
 
 Task: Using the index and alignments, build a graph of the MHC region across the set of human genomes ([CHM13 coords](https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/genome-stratifications/v3.6/CHM13@all/OtherDifficult/CHM13_MHC.bed.gz) -> chr6:28381448-33301940). Use `-o gfa:seqwish`, which skips the slow smoothing step for the purposes of this tutorial. If you skipped the optional human alignments archive, you can use the pre-built MHC graph under `$DATA/human/mhc/mhc.gfa` for the next (`vg`) section instead.
 
+This step needs the human assemblies (not the yeast example above). Decompress them if you have not already:
+
+```bash
+AGC=/data/datasets/human.agc
+FASTA_DIR=$OUT/human_fastas
+mkdir -p "$FASTA_DIR"
+agc getcol -o "$FASTA_DIR" "$AGC"
+```
+
 <details>
 <summary>Show impg query command</summary>
 
 ```bash
-impg query -i "$DATA/human/alignments.paf.impg" -a "$DATA/human/alignments.paf" -r "chr6:28381448-33301940" -d 1000 -x -o gfa:seqwish --sequence-files "$FASTA_DIR/*.fa" -O "$OUT/mhc" --aligner wfmash
+impg query -i "$DATA/human/alignments.paf.impg" -a "$DATA/human/alignments.paf" -r "chr6:28381448-33301940" -d 1000 -x -o gfa:seqwish --sequence-files "$FASTA_DIR"/*.fa -O "$OUT/mhc" --aligner wfmash
 ```
 
 </details>
@@ -325,17 +334,18 @@ Task: Build a `vg giraffe` index from a GFA (e.g. the MHC graph from impg). Also
 <summary>Show solution</summary>
 
 ```bash
-samtools faidx "$FASTA_DIR/chm13v2.0.fa" chr6:28381448-33301940 > mhc_chm13.fa
-vg autoindex --workflow giraffe -r mhc_chm13.fa -p "$OUT/mhc_chm13"
+samtools faidx "$FASTA_DIR/chm13v2.0.fa" chr6:28381448-33301940 > "$OUT/mhc_chm13.fa"
+# long-read Giraffe indexes (for HiFi / PacBio / ONT)
+vg autoindex --workflow lr-giraffe -r "$OUT/mhc_chm13.fa" -p "$OUT/mhc_chm13"
 
 # or use the pre-built MHC GFA from the course data dir: $DATA/human/mhc/mhc.gfa
-vg autoindex --workflow giraffe -g "$OUT/mhc.gfa" -p "$OUT/mhc"
+vg autoindex --workflow lr-giraffe -g "$OUT/mhc.gfa" -p "$OUT/mhc"
 ```
 
 </details>
 
 Inputs: a variation graph in GFA format
 
-Outputs: Giraffe indexes (e.g. `.giraffe.gbz`, `.dist`, and minimizer / zipcode files)
+Outputs: long-read Giraffe indexes (e.g. `.giraffe.gbz`, `.dist`, and `.longread.withzip.min` / zipcode files)
 
 ---
