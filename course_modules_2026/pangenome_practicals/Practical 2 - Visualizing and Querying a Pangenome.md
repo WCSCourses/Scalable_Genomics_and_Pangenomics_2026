@@ -361,3 +361,28 @@ vg giraffe -b hifi \
 Inputs: long-read Giraffe indexes from Practical 1 (`lr-giraffe`) and long HiFi reads
 
 Outputs: GAM alignments for each index
+
+### Panagram view and introgression detection
+
+An introgression is the transfer of genetic material from one species to another (https://en.wikipedia.org/wiki/Introgression). Finding and understanding introgressions is especially interesting in agricultural settings where the introgressed region may confer a desirable trait, such as disease resistance (DOI: 10.1016/j.cub.2022.07.004). 
+
+[Panagram](https://github.com/kjenike/panagram) visualises pan-k-mers.
+
+Task: Given the pre-computed pan-k-mer bitmap identify at least one introgressed region in S. aethiopicum. 
+Hint: You will likely want to use the query.py script. 
+
+<details>
+<summary>Show example Panagram query command</summary>
+
+```bash
+python query.py Saethiopicum chr1 0 110971472 .
+```
+
+</details>
+
+
+Inputs: a pan-k-mer bitmap
+
+Outputs: an SVG image of a region
+
+---
