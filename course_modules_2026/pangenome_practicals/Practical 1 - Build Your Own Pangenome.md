@@ -6,7 +6,7 @@ There are many notions of what a pangenome is:
 - A compressed index of each genome as a text that is queryable
 - A catalog of variation and conservation
 
-In this practical session, we will run a few tools that “build” different notions of a pangenome and walk through how each let’s us visualize and query our dataset.
+In this practical session, we will run a few tools that “build” different notions of a pangenome and walk through how each lets us visualize and query our dataset.
 
 **Docker Image with all the tools pre-installed:** [vikshiv/scalable-course:latest](https://hub.docker.com/r/vikshiv/scalable-course) (`linux/amd64`)
 
@@ -25,7 +25,36 @@ In this practical you will:
 
 ## 0) Pull the docker container and datasets
 
-See the course informatics guide for instructions on using the docker image.
+See the course informatics guide for full setup instructions. After unpacking the course archives into `datasets/` (AGCs) and `data/` (pre-built outputs) in your working directory, start an interactive session with both directories mounted:
+
+**Docker:**
+
+```bash
+docker pull vikshiv/scalable-course:latest
+
+mkdir -p work
+docker run --rm -it \
+  --platform linux/amd64 \
+  -v "$PWD/datasets:/data/datasets:ro" \
+  -v "$PWD/data:/data/data:ro" \
+  -v "$PWD/work:/data/work" \
+  vikshiv/scalable-course:latest
+```
+
+**Singularity / Apptainer:**
+
+```bash
+apptainer pull scalable-course.sif docker://vikshiv/scalable-course:latest
+
+mkdir -p work
+apptainer shell \
+  --bind "$PWD/datasets:/data/datasets:ro,$PWD/data:/data/data:ro,$PWD/work:/data/work" \
+  scalable-course.sif
+```
+
+> Use `singularity` in place of `apptainer` if that is what your cluster provides. On Apple Silicon (or other arm64 hosts), keep `--platform linux/amd64` for Docker.
+
+Inside the container, AGCs are under `/data/datasets`, pre-built outputs under `/data/data`, and writable outputs under `/data/work`.
 
 To test that the tools are installed and available:
 
@@ -33,15 +62,13 @@ To test that the tools are installed and available:
 which agc ropebwt3 syng impg BandageNG panacus vg mumemto shredtools panagram minimap2
 ```
 
-Next, follow the informatics guide to start an interactive terminal session inside the container, mounting the datasets directory. We provided a few datasets to choose from depending on your computing setup and species of interest.
-
-We provide an AGC file for each dataset:
+We provided a few datasets to choose from depending on your computing setup and species of interest. We provide an AGC file for each dataset:
 
 - *A. thaliana* full genomes (n=5)
 - *A. thaliana* chr5 (n=5)
 - Human full genomes (n=5)
 - Human chr20 (n=5)
-- *S. ceraviseae* full genomes (n=22)
+- *S. cerevisiae* full genomes (n=22)
 
 You may also run any of the tools on your own dataset of interest!
 
@@ -57,6 +84,7 @@ We highly encourage you to use the help pages (`toolname -h`) and documentation 
 
 ```bash
 AGC=/data/datasets/yeast_t2t_haploid.agc
+DATA=/data/data
 OUT=/data/work/
 FASTA_DIR=$OUT/fastas
 mkdir -p "$OUT" "$FASTA_DIR"
@@ -92,7 +120,7 @@ Outputs: a directory of FASTA files (one file per sample)
 
 ### Mumemto / Shredtools
 
-[Mumemto](https://github.com/vikshiv/mumemto) reports maximal unique matches across a set of assemblies. These matches represent conserved columns in the underlying multiple sequence alignment. Shredtools is a companion tool to Mumemto that indexes the MUMs list for querying. 
+[Mumemto](https://github.com/vikshiv/mumemto) reports maximal unique matches across a set of assemblies. These matches represent conserved columns in the underlying multiple sequence alignment. Shredtools is a companion tool to Mumemto that indexes the MUMs list for querying.
 
 Task: run Mumemto on the set of assemblies to create a `bumbl` file containing the MUMs. Then filter and index the set of MUMs for querying.
 
@@ -123,7 +151,7 @@ Outputs: a `bumbl` file, a binary file that contains a list of exact matches and
 <summary>How to view the output <code>bumbl</code> file</summary>
 
 ```bash
-mumemto view $OUT/mumemto.bumbl | less
+mumemto view "$OUT/mumemto.bumbl" | less
 ```
 
 </details>
@@ -134,7 +162,7 @@ Extra exercises:
 <summary>Compute the coverage of MUMs (how much of a given assembly is “shared” and unique across the pangenome?)</summary>
 
 ```bash
-mumemto coverage -i $OUT/mumemto.bumbl
+mumemto coverage -i "$OUT/mumemto.bumbl"
 ```
 
 </details>
@@ -264,14 +292,13 @@ impg index -a "$OUT/alignments/alignments.paf" -i "$OUT/alignments.impg"
 
 </details>
 
-Task: Using the index and alignments, build a graph from of the HLA region across the set of human genomes ([CHM13 coords](https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/genome-stratifications/v3.6/CHM13@all/OtherDifficult/CHM13_MHC.bed.gz) -> chr6:28381448-33301940). Use `-o gfa:seqwish`, which skips the slow smoothing step for the purposes of this tutorial.
+Task: Using the index and alignments, build a graph of the MHC region across the set of human genomes ([CHM13 coords](https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/genome-stratifications/v3.6/CHM13@all/OtherDifficult/CHM13_MHC.bed.gz) -> chr6:28381448-33301940). Use `-o gfa:seqwish`, which skips the slow smoothing step for the purposes of this tutorial.
 
 <details>
 <summary>Show impg query command</summary>
 
 ```bash
-# replace contig/coords with names from your human FASTA headers (HLA / MHC region)
-impg query -i "$OUT/alignments.impg" -a "$OUT/alignments/alignments.paf" -r "chr6:28381448-33301940" -d 1000 -x -o gfa:seqwish --sequence-files "$FASTA_DIR/*.fa" -O "$OUT/hla" --aligner wfmash
+impg query -i "$DATA/human/alignments.paf.impg" -a "$DATA/human/alignments.paf" -r "chr6:28381448-33301940" -d 1000 -x -o gfa:seqwish --sequence-files "$FASTA_DIR/*.fa" -O "$OUT/mhc" --aligner wfmash
 ```
 
 </details>
@@ -288,18 +315,19 @@ Outputs: an `.impg` index and a GFA graph for the queried region
 
 [vg](https://github.com/vgteam/vg) is a toolkit to manipulate variation graphs (such as those produced by impg or [minigraph-cactus](https://github.com/ComparativeGenomicsToolkit/cactus/blob/master/doc/pangenome.md)). Here we build a Giraffe index for read mapping from a variation graph.
 
-We provide a pre-built HLA graph in GFA format (smoothed) from the previous section.
+We provide a pre-built MHC graph in GFA format (smoothed) from the previous section.
 
-Task: Build a `vg giraffe` index from a GFA (e.g. the HLA graph from impg). Also build an index for the CHM13 linear sequence (start by isolating the sequence).
+Task: Build a `vg giraffe` index from a GFA (e.g. the MHC graph from impg). Also build an index for the CHM13 linear sequence (start by isolating the sequence).
 
 <details>
 <summary>Show solution</summary>
 
 ```bash
-samtools faidx "$FASTA_DIR/chm13v2.0.fa" chr6:28381448-33301940 > hla_chm13.fa
-vg autoindex --workflow giraffe -r hla_chm13.fa -p "$OUT/hla_chm13"
+samtools faidx "$FASTA_DIR/chm13v2.0.fa" chr6:28381448-33301940 > mhc_chm13.fa
+vg autoindex --workflow giraffe -r mhc_chm13.fa -p "$OUT/mhc_chm13"
 
-vg autoindex --workflow giraffe -g "$OUT/hla.gfa" -p "$OUT/hla"
+# or use the pre-built MHC GFA from the course data dir: $DATA/human/mhc/mhc.gfa
+vg autoindex --workflow giraffe -g "$OUT/mhc.gfa" -p "$OUT/mhc"
 ```
 
 </details>
