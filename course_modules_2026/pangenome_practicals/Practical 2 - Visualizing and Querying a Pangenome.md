@@ -4,6 +4,8 @@ In this practical session, we will try a few visualizations and queries that let
 
 **Docker Image with all the tools pre-installed:** [vikshiv/scalable-course:latest](https://hub.docker.com/r/vikshiv/scalable-course) (`linux/amd64`)
 
+**Course data (FTP):** [https://ftp.ebi.ac.uk/pub/databases/metagenomics/research-team/shivakumar/scalable_course/](https://ftp.ebi.ac.uk/pub/databases/metagenomics/research-team/shivakumar/scalable_course/)
+
 ---
 
 ## Learning objectives
@@ -50,7 +52,7 @@ apptainer shell \
 
 Inside the container, AGCs are under `/data/datasets`, pre-built outputs under `/data/data`, and writable outputs under `/data/work`.
 
-**Course data downloads.** Unpack these next to each other in your working directory (so you end up with `datasets/` and `data/`):
+**Course data downloads** (from the [FTP directory](https://ftp.ebi.ac.uk/pub/databases/metagenomics/research-team/shivakumar/scalable_course/)). Unpack these next to each other in your working directory (so you end up with `datasets/` and `data/`):
 
 
 | Archive                       | Required?       | Contents                                                         |
