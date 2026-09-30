@@ -252,20 +252,26 @@ Outputs: a panagram index directory for interactive visualisation
 
 ### impg
 
-[impg](https://github.com/pangenome/impg) indexes and enables querying of genomic intervals across a pangenome using all-vs-all pairwise genome alignments. Running all pairs alignments is slow without a multi-CPU machine, so for this step we provide pre-computed alignments.
-
-TODO: finalize HLA contig names / coords for the provided human dataset
-TODO: include the runtime and memory for a real world example for anything we pre-bake
-
-Task: Index the pairwise alignments. Build a graph from of the HLA region across the set of human genomes.
+[impg](https://github.com/pangenome/impg) indexes and enables querying of genomic intervals across a pangenome using all-vs-all pairwise genome alignments. Running all pairs alignments is slow without a multi-CPU machine, so for this step we provide pre-computed alignments. We provide an example command to compute the alignments below for your reference.
 
 <details>
-<summary>Show impg example command</summary>
+<summary>Show impg align example command</summary>
 
 ```bash
-impg index -a "$OUT/all.paf" -i "$OUT/all.impg"
+impg align --sequence-files "$FASTA_DIR/*.fa" --temp-dir "$OUT/work" -o "$OUT/alignments" --format paf --aligner wfmash
+impg index -a "$OUT/alignments/alignments.paf" -i "$OUT/alignments.impg"
+```
+
+</details>
+
+Task: Using the index and alignments, build a graph from of the HLA region across the set of human genomes ([CHM13 coords](https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/genome-stratifications/v3.6/CHM13@all/OtherDifficult/CHM13_MHC.bed.gz) -> chr6:28381448-33301940). Use `-o gfa:seqwish`, which skips the slow smoothing step for the purposes of this tutorial.
+
+<details>
+<summary>Show impg query command</summary>
+
+```bash
 # replace contig/coords with names from your human FASTA headers (HLA / MHC region)
-impg query -i "$OUT/all.impg" -a "$OUT/all.paf" -r "SAMPLE#1#chr6:28510120-33480577" -d 1000 -x -o gfa --sequence-files "$OUT/all.fa" -O "$OUT/hla"
+impg query -i "$OUT/alignments.impg" -a "$OUT/alignments/alignments.paf" -r "chr6:28381448-33301940" -d 1000 -x -o gfa:seqwish --sequence-files "$FASTA_DIR/*.fa" -O "$OUT/hla" --aligner wfmash
 ```
 
 </details>
@@ -282,12 +288,17 @@ Outputs: an `.impg` index and a GFA graph for the queried region
 
 [vg](https://github.com/vgteam/vg) is a toolkit to manipulate variation graphs (such as those produced by impg or [minigraph-cactus](https://github.com/ComparativeGenomicsToolkit/cactus/blob/master/doc/pangenome.md)). Here we build a Giraffe index for read mapping from a variation graph.
 
-Task: Build a `vg giraffe` index from a GFA (e.g. the HLA graph from impg).
+We provide a pre-built HLA graph in GFA format (smoothed) from the previous section.
+
+Task: Build a `vg giraffe` index from a GFA (e.g. the HLA graph from impg). Also build an index for the CHM13 linear sequence (start by isolating the sequence).
 
 <details>
-<summary>Show vg example command</summary>
+<summary>Show solution</summary>
 
 ```bash
+samtools faidx "$FASTA_DIR/chm13v2.0.fa" chr6:28381448-33301940 > hla_chm13.fa
+vg autoindex --workflow giraffe -r hla_chm13.fa -p "$OUT/hla_chm13"
+
 vg autoindex --workflow giraffe -g "$OUT/hla.gfa" -p "$OUT/hla"
 ```
 

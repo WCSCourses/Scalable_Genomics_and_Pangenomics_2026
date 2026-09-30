@@ -52,7 +52,7 @@ We've computed the set of multi-MUMs across the pangenome. In general for useful
 
 First, we will visualize the multi-MUM synteny of *A. thaliana* genomes. Since each assembly has the same number of contigs, we can split the visualization by chromosome using `shredtools viz --mode gapped`. 
 <details>
-<summary>Show mumemto example command</summary>
+<summary>Show mumemto command</summary>
 
 ```bash
 mumemto viz -o "$ANALYSIS_DIR/mumemto.pdf" -i "$OUT/mumemto" --mode gapped
@@ -62,7 +62,7 @@ mumemto viz -o "$ANALYSIS_DIR/mumemto.pdf" -i "$OUT/mumemto" --mode gapped
 Next, we can query a region of interest and extract syntenic regions across the pangenome using `shredtools extract`. For this exercise, we will extract the FLC gene involved in flowering using the following region: `chr5:3,173,000–3,179,000`.
 
 <details>
-<summary>Show shredtools example command</summary>
+<summary>Show shredtools command</summary>
 ```bash
 shredtools extract -o "$ANALYSIS_DIR/flc" -s 0 -r CP138175.1:3173000-3179000 --plot "$OUT/mumemto.bumbl"
 ```
@@ -82,6 +82,8 @@ ropebwt3 mem "$OUT/rb3.fmd" "$DATA/reads.fa" > "$ANALYSIS_DIR/read_mems.txt"
 </details>
 
 Next, we can query an assembly against the index and compute kmer diversity with respect to the pangenome. This is helpful to identify regions that are highly similar or dissimilar in a query assembly with respect to the population. For this, we can use the `ropebwt3 hapdiv` command.
+
+We've held out the Tanz-1 assembly from the pangenome (in TODO: path to pre-bake data /tanz1.fa). Use this as the query assembly.
 
 <details>
 <summary>Show ropebwt3 hapdiv command</summary>
@@ -104,17 +106,62 @@ syngmap -o "$ANALYSIS_DIR/syngmap" -outputIds "$OUT/syng.1khash" "$OUT/syng.1gbw
 
 ---
 
+### impg
+TODO: finalize Arabidopsis PAF / sequence files for the FLC region
+TODO: fix to be one command to make graph w/o re-running alignments
+
+We can project the same FLC gene region through the all-vs-all alignments, extract the homologous sequences across the pangenome, and build a local variation graph with `impg`.
+
+Task: Query the FLC region (`CP138175.1:3173000-3179000`) from the *A. thaliana* alignments and build a GFA graph of the homologous sequences.
+
+<details>
+<summary>Show impg extract + graph commands</summary>
+
+```bash
+impg query -i "$OUT/all.impg" -a "$OUT/all.paf" -r "CP138175.1:3173000-3179000" -d 1000 -x -o fasta --sequence-files "$DATA/assemblies.fa" -O "$ANALYSIS_DIR/flc_impg"
+impg graph --sequence-files "$ANALYSIS_DIR/flc_impg.fa" -g "$ANALYSIS_DIR/flc.gfa"
+```
+
+</details>
+
+Inputs: all-vs-all pairwise alignments (PAF), the corresponding FASTA sequences, and a query interval
+
+Outputs: extracted homologous FASTA sequences and a local GFA graph (`flc.gfa`)
+
+---
+
+### BandageNG
+
+[BandageNG](https://github.com/asl/BandageNG) visualises assembly / variation graphs. Here we render the FLC graph built with impg above.
+
+Task: Produce an image of the FLC variation graph.
+
+<details>
+<summary>Show BandageNG command</summary>
+
+```bash
+BandageNG image "$ANALYSIS_DIR/flc.gfa" "$ANALYSIS_DIR/flc.png"
+```
+
+</details>
+
+Inputs: a variation graph in GFA format
+
+Outputs: a PNG image of the graph layout
+
+---
+
 ### panacus
 
 [panacus](https://github.com/codialab/panacus) computes coverage and growth statistics over a pangenome graph (GFA). This is useful for determining how much of the pangenome is core vs accessory based on the multiple alignment encoded in the graph topology.
 
-Task: Summarize node coverage and pangenome growth for the HLA graph from impg.
+Task: Summarize node coverage and pangenome growth for the FLC graph from impg.
 
 <details>
 <summary>Show panacus example command</summary>
 
 ```bash
-panacus histgrowth "$OUT/hla.gfa" > "$OUT/hla.histgrowth.tsv"
+panacus histgrowth "$ANALYSIS_DIR/flc.gfa" > "$ANALYSIS_DIR/flc.histgrowth.tsv"
 ```
 
 </details>
@@ -125,39 +172,33 @@ Outputs: a table of histogram / growth statistics (TSV)
 
 ---
 
-### impg / BandageNG
-TODO: finalize Arabidopsis PAF / sequence files for the FLC region
-TODO: fix to be one command to make graph w/o re-running alignments
-
-We can project the same FLC gene region through the all-vs-all alignments, extract the homologous sequences across the pangenome, build a local variation graph with `impg graph`, and visualise it with BandageNG.
-
-<details>
-<summary>Show impg extract + graph commands</summary>
-```bash
-impg query -i "$OUT/all.impg" -a "$OUT/all.paf" -r "CP138175.1:3173000-3179000" -d 1000 -x -o fasta --sequence-files "$DATA/assemblies.fa" -O "$ANALYSIS_DIR/flc_impg"
-impg graph --sequence-files "$ANALYSIS_DIR/flc_impg.fa" -g "$ANALYSIS_DIR/flc.gfa"
-```
-</details>
-
-<details>
-<summary>Show BandageNG command</summary>
-```bash
-BandageNG image "$ANALYSIS_DIR/flc.gfa" "$ANALYSIS_DIR/flc.png"
-```
-</details>
-
 ### vg giraffe
 TODO: get short reads matching the Practical 1 HLA graph
 
-Using the Giraffe indexes built in Practical 1, map a set of reads to the HLA variation graph with `vg giraffe`.
+In Practical 1 we built two Giraffe indexes for the HLA / MHC region:
+
+- `$OUT/hla` — variation graph over the 5 human haplotypes
+- `$OUT/hla_chm13` — linear CHM13 sequence for the same region
+
+Task: Align the provided human short reads with `vg giraffe` against **both** indexes and compare the resulting alignments.
 
 <details>
-<summary>Show vg giraffe command</summary>
+<summary>Show solution</summary>
+
 ```bash
-vg giraffe -Z "$OUT/hla.giraffe.gbz" -d "$OUT/hla.dist" -m "$OUT/hla.min" -f "$DATA/reads.fa" > "$ANALYSIS_DIR/reads.gam"
+# map against the 5-haplotype HLA graph
+vg giraffe -Z "$OUT/hla.giraffe.gbz" -d "$OUT/hla.dist" -m "$OUT/hla.min" \
+  -f "$DATA/reads.fa" > "$ANALYSIS_DIR/reads.hla.gam"
+
+# map against the linear CHM13 HLA index
+vg giraffe -Z "$OUT/hla_chm13.giraffe.gbz" -d "$OUT/hla_chm13.dist" -m "$OUT/hla_chm13.min" \
+  -f "$DATA/reads.fa" > "$ANALYSIS_DIR/reads.hla_chm13.gam"
 ```
+
 </details>
 
-TODO: compare to aligning to a single reference
+Inputs: Giraffe indexes from Practical 1 and a FASTA/FASTQ of short reads
+
+Outputs: GAM alignments for each index
 
 
