@@ -294,13 +294,24 @@ Outputs: an SVG image of the graph layout
 
 [panacus](https://github.com/codialab/panacus) computes coverage and growth statistics over a pangenome graph (GFA). This is useful for determining how much of the pangenome is core vs accessory based on the multiple alignment encoded in the graph topology.
 
-Task: Summarize node coverage and pangenome growth for the FLC graph from impg.
+Task: Build an HTML report with coverage histogram and growth curves for the FLC graph from impg.
 
 <details>
 <summary>Show panacus example command</summary>
 
 ```bash
-panacus histgrowth "$ANALYSIS_DIR/flc.gfa" > "$ANALYSIS_DIR/flc.histgrowth.tsv"
+cat > "$ANALYSIS_DIR/flc_report.yaml" <<EOF
+- !Gfa
+  graph: $ANALYSIS_DIR/flc.gfa
+  count_type: Bp
+  analyses:
+    - !Hist
+    - !Growth
+      coverage: 1,1,2
+      quorum: 0,0.9,0
+EOF
+
+panacus report "$ANALYSIS_DIR/flc_report.yaml" > "$ANALYSIS_DIR/flc_report.html"
 ```
 
 </details>
@@ -309,7 +320,7 @@ panacus histgrowth "$ANALYSIS_DIR/flc.gfa" > "$ANALYSIS_DIR/flc.histgrowth.tsv"
 
 Inputs: a variation graph in GFA format
 
-Outputs: a table of histogram / growth statistics (TSV)
+Outputs: an interactive HTML report (`flc_report.html`) with histogram and growth analyses
 
 ---
 
