@@ -171,6 +171,10 @@ shredtools extract -o "$ANALYSIS_DIR/flc" -s 0 -r CP138175.1:3173000-3179000 --p
 
 
 
+---
+
+
+
 ### ropebwt3
 
 We previously generated an FM-index using ropebwt3. There are a few things we can do, all centered around finding exact matches between a query and the index.
@@ -202,6 +206,10 @@ ropebwt3 hapdiv "$ATH_OUT/ropebwt3/rb3.fmd" "$ANALYSIS_DIR/flc_fa/"*extract*.fa 
 ```
 
 </details>
+
+
+
+---
 
 
 
