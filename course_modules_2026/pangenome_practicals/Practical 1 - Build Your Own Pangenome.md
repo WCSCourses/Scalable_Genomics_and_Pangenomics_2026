@@ -20,6 +20,7 @@ In this practical you will:
 
 1. Run each tool on a small set of genome assemblies
 2. Understand the inputs and outputs of each method
+3. Explain the pros and cons of each method and which method is appropriate for different types of pangenomes
 
 ---
 
@@ -73,6 +74,7 @@ We provided a few datasets to choose from depending on your computing setup and 
 - *S. cerevisiae* full genomes (n=22)
 
 You may also run any of the tools on your own dataset of interest!
+For an added challenge, pick two datasets from above and compare the outputs. 
 
 ---
 
