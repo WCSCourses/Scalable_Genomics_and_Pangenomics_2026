@@ -280,7 +280,7 @@ Outputs: a panagram index directory for interactive visualisation
 
 ### impg
 
-[impg](https://github.com/pangenome/impg) indexes and enables querying of genomic intervals across a pangenome using all-vs-all pairwise genome alignments. Running all pairs alignments is slow without a multi-CPU machine, so for this step we provide pre-computed alignments. We provide an example command to compute the alignments below for your reference.
+[impg](https://github.com/pangenome/impg) indexes and enables querying of genomic intervals across a pangenome using all-vs-all pairwise genome alignments. Running all pairs alignments is slow without a multi-CPU machine, so for this step we provide pre-computed alignments (`alignments_human.tar.gz` — optional large download; unpacks to `data/human/alignments.paf`). We provide an example command to compute the alignments below for your reference.
 
 <details>
 <summary>Show impg align example command</summary>
@@ -292,7 +292,7 @@ impg index -a "$OUT/alignments/alignments.paf" -i "$OUT/alignments.impg"
 
 </details>
 
-Task: Using the index and alignments, build a graph of the MHC region across the set of human genomes ([CHM13 coords](https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/genome-stratifications/v3.6/CHM13@all/OtherDifficult/CHM13_MHC.bed.gz) -> chr6:28381448-33301940). Use `-o gfa:seqwish`, which skips the slow smoothing step for the purposes of this tutorial.
+Task: Using the index and alignments, build a graph of the MHC region across the set of human genomes ([CHM13 coords](https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/genome-stratifications/v3.6/CHM13@all/OtherDifficult/CHM13_MHC.bed.gz) -> chr6:28381448-33301940). Use `-o gfa:seqwish`, which skips the slow smoothing step for the purposes of this tutorial. If you skipped the optional human alignments archive, you can use the pre-built MHC graph under `$DATA/human/mhc/mhc.gfa` for the next (`vg`) section instead.
 
 <details>
 <summary>Show impg query command</summary>
