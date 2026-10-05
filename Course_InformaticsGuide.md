@@ -131,7 +131,7 @@ apptainer shell \
 
 ## Option 2: Software used during the course
 
-> Versions below match the course container image [`vikshiv/scalable-course:latest`](https://hub.docker.com/r/vikshiv/scalable-course) (`linux/amd64`).
+> Versions for the existing course tools match [`vikshiv/scalable-course:latest`](https://hub.docker.com/r/vikshiv/scalable-course) (`linux/amd64`). The K-mer graph practical tools added below use the versions tested in [`npmalfoy/scalable:2026`](https://hub.docker.com/r/npmalfoy/scalable); they still need to be incorporated into the main course image. Installation instructions are at the end of the [K-mer graph practical PDF](course_modules_2026/module_4_Kmers_in_a_Graph/practical.pdf).
 
 | Software | Link | Version | Notes |
 |-------------|-------------|--------------|-------------|
@@ -158,6 +158,17 @@ apptainer shell \
 | panagram | https://github.com/kjenike/panagram | v1.0.0 | Interactive pangenome / k-mer visualisation |
 | syng | https://github.com/richarddurbin/syng | commit `a4ed6bac` | Syncmer graph construction (`syng`, `syngpath2gbwt`, …) |
 | alntools | https://github.com/richarddurbin/alntools | commit `87a135e` | Helpers for FastGA / FasTAN (`.1aln` utilities) |
+| SPAdes | https://github.com/ablab/spades | 4.3.0 | K-mer graph practical: short-read assembly, including paired reads |
+| MEGAHIT | https://github.com/voutcn/megahit | 1.2.9 | K-mer graph practical: short-read assembly |
+| Flye | https://github.com/mikolmogorov/Flye | 2.9.6 | K-mer graph practical: long-read assembly |
+| hifiasm | https://github.com/chhylp123/hifiasm | 0.25.0 | K-mer graph practical: HiFi assembly, optionally with ultralong Nanopore reads |
+| Verkko | https://github.com/marbl/verkko | 2.3.2 | K-mer graph practical: HiFi and Nanopore assembly; requires `bc` |
+| GGCAT | https://github.com/algbio/ggcat | 2.2.0 | K-mer graph practical: compacted de Bruijn graphs; does not remove tips or collapse bubbles |
+| SeqKit | https://github.com/shenwei356/seqkit | 2.14.0 | K-mer graph practical: FASTA/FASTQ manipulation and sequence statistics |
+| QUAST | https://github.com/ablab/quast | 5.3.0 | K-mer graph practical: assembly evaluation against reference genome A |
+| Meryl | https://github.com/marbl/meryl | 1.4.2 | K-mer graph practical: k-mer counting for Merqury |
+| Merqury | https://github.com/marbl/merqury | 1.4.1 | K-mer graph practical: reference-free assembly evaluation with Meryl; distinct from MerquryFK |
+| Vizitig | https://gitlab.inria.fr/vizisoft/vizitig | 1.2 | K-mer graph practical: graph exploration; tested with Vizibridge 0.6.2, NetworkDisk 1.1.9 and NetworkX 2.8 |
 | AWS CLI | https://aws.amazon.com/cli/ | Latest | Command-line tool for interacting with AWS services, used for downloading datasets |
 
 ---
