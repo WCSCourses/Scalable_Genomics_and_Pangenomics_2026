@@ -1,5 +1,5 @@
 # Scalable Genomics course image: pangenome tools on PATH
-# Build (linux/amd64 for Docker Hub + Singularity/HPC):
+# Build from this directory (linux/amd64 for Docker Hub + Singularity/HPC):
 #   docker build --platform linux/amd64 -t YOUR_DOCKERHUB_USER/scalable-course:latest .
 
 FROM mambaorg/micromamba:2.0.5
@@ -12,6 +12,7 @@ ARG GENOMESCOPE2_TAG=v2.1.0
 ARG SMUDGEPLOT_TAG=v0.5.4
 ARG GENESPACE_COMMIT=7561036be821e333c1dfb52461ccec7222e95582
 ARG SVBYEYE_COMMIT=5866e7f198b7827628aa95ea3bfa421986a0bbd8
+ARG DASHING2_COMMIT=8b124f690d278e241f46908e8c8c4fe4d2a9a9f6
 
 USER root
 # System toolchain for syng; less for interactive paging
@@ -87,9 +88,19 @@ RUN micromamba run -n scalable_course Rscript -e \
 RUN micromamba run -n scalable_course Rscript -e \
       "remotes::install_github('daewoooo/SVbyEye@${SVBYEYE_COMMIT}', upgrade='never', dependencies=FALSE); stopifnot(requireNamespace('SVbyEye', quietly=TRUE))"
 
+# --- dashing2 (BenLangmead fork branch test/all-fixes; pinned commit 8b124f6) ---
+# Build: make GIT_VERSION=v2.1.20-allfixes-$(git rev-parse --short HEAD) dashing2
+RUN git clone --recurse-submodules -b test/all-fixes \
+      https://github.com/BenLangmead/dashing2.git dashing2-allfixes \
+    && cd dashing2-allfixes \
+    && git checkout ${DASHING2_COMMIT} \
+    && git submodule update --init --recursive \
+    && make -j"$(nproc)" GIT_VERSION=v2.1.20-allfixes-$(git rev-parse --short HEAD) dashing2 \
+    && cp -f dashing2 /opt/tools/bin/
+
 USER root
 COPY entrypoint.sh /usr/local/bin/course-entrypoint.sh
-COPY scripts/smoke_test.sh /opt/tools/bin/smoke_test.sh
+COPY smoke_test.sh /opt/tools/bin/smoke_test.sh
 RUN chmod +x /usr/local/bin/course-entrypoint.sh \
       /opt/tools/bin/smoke_test.sh \
     && chown $MAMBA_USER:$MAMBA_USER /opt/tools/bin/smoke_test.sh

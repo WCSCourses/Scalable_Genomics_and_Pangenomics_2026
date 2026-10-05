@@ -151,6 +151,7 @@ apptainer shell \
 | FastK | https://github.com/thegenemyers/FASTK | 1.2 | High-performance k-mer counting toolkit |
 | MerquryFK | https://github.com/thegenemyers/MERQURY.FK | 1.2 | Assembly QC with FastK k-mers |
 | sourmash | https://github.com/sourmash-bio/sourmash | 4.9.4 | Sketching and comparison of genomic datasets |
+| dashing2 | https://github.com/BenLangmead/dashing2 | `v2.1.20-allfixes-8b124f6` (`test/all-fixes`) | Sequence sketching and comparison (custom fork with fixes) |
 | FastGA | https://github.com/thegenemyers/FASTGA | 1.5.20260729 | Fast genome–genome alignment |
 | FasTAN | https://github.com/thegenemyers/FasTAN | 0.8 | Tandem / local alignment helpers (bioconda `fastan`) |
 | panagram | https://github.com/kjenike/panagram | v1.0.0 | Interactive pangenome / k-mer visualisation |
