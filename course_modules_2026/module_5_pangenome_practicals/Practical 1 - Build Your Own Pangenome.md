@@ -131,7 +131,7 @@ Inputs: an AGC archive (`.agc`)
 
 Outputs: a directory of FASTA files (one file per sample)
 
-*Further reading:* Deorowicz et al. (2023) AGC: compact assembled-genome collections — explains why a single `.agc` archive is the practical’s starting point for decompressing many assemblies on demand. https://doi.org/10.1093/bioinformatics/btad097
+*Further reading:* Deorowicz et al. (2023) AGC: compact representation of assembled genomes with fast queries and updates. https://doi.org/10.1093/bioinformatics/btad097
 
 ---
 
@@ -201,7 +201,7 @@ mumemto view "$OUT/tool_outputs/mumemto/mumemto.bumbl" | awk '{s+=$1;n++} END{pr
 
 </details>
 
-*Further reading:* Shivakumar & Langmead (2025) Mumemto: maximal matching across pangenomes — motivates multi-MUMs as conserved columns and the `bumbl` + Shredtools index you build for later querying. https://doi.org/10.1186/s13059-025-03644-0
+*Further reading:* Shivakumar & Langmead (2025) Mumemto: efficient maximal matching across pangenomes. https://doi.org/10.1186/s13059-025-03644-0
 
 ---
 
@@ -243,7 +243,7 @@ Compute the size of the BWT
 ropebwt3 stat "$OUT/tool_outputs/ropebwt3/rb3.fmd"
 ```
 
-*Further reading:* Li (2024) BWT construction and search at terabase scale — background on the dynamic `.fmr` → static `.fmd` FM-index you build over the assembly collection. https://doi.org/10.1093/bioinformatics/btae717
+*Further reading:* Li (2024) BWT construction and search at the terabase scale. https://doi.org/10.1093/bioinformatics/btae717
 
 ---
 
@@ -275,7 +275,7 @@ Inputs: a set of FASTA files
 
 Outputs: syng path / kmer files (e.g. `.1path`) and a GBWT (`.1gbwt`)
 
-*Further reading:* Durbin (2026) Dynamic GBWTs over syncmer graphs (syng) — describes the syncmer path graph and GBWT indexing workflow behind `syng` + `syngpath2gbwt`. https://doi.org/10.64898/2026.03.26.714584
+*Further reading:* Durbin (2026) A run-length-compressed skiplist data structure for dynamic GBWTs supports time and space efficient pangenome operations over syncmers. https://doi.org/10.64898/2026.03.26.714584
 
 ---
 
@@ -307,7 +307,7 @@ Inputs: all-vs-all pairwise alignments (PAF)
 
 Outputs: an `.impg` index
 
-*Further reading:* Sorin et al. (2026) IMPG for locus projection in cattle — example of indexing all-vs-all PAF and projecting a target interval for downstream sequence extraction (same pattern as your *A. thaliana* index step). https://doi.org/10.1186/s12711-026-01037-w
+*Further reading:* Sorin et al. (2026) Pangenome-based association testing between a structural variant located upstream of the KIT gene and head depigmentation across a diverse panel of cattle breeds. https://doi.org/10.1186/s12711-026-01037-w
 
 ---
 
@@ -342,7 +342,7 @@ Inputs: a variation graph in GFA format (and optionally a linear FASTA)
 
 Outputs: long-read Giraffe indexes (e.g. `.giraffe.gbz`, `.dist`, and `.longread.withzip.min` / zipcode files)
 
-*Further reading:* Hickey et al. (2024) Minigraph-Cactus pangenome graphs — context for the shipped MHC variation graph and why `vg autoindex` targets a graph built from many haplotypes. https://doi.org/10.1038/s41587-023-01793-w
+*Further reading:* Hickey et al. (2024) Pangenome graph construction from genome alignments with Minigraph-Cactus. https://doi.org/10.1038/s41587-023-01793-w
 
 ---
 

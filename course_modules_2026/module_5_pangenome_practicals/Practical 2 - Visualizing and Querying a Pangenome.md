@@ -164,7 +164,7 @@ sed -i 's|/data/data/|/course/data/|g; s|/data/work/|/course/data/work/|g' "$ANA
 
 </details>
 
-*Further reading:* Shivakumar & Langmead (2025) Mumemto: maximal matching across pangenomes — connects gapped synteny plots and `shredtools extract` at the FLC locus to multi-MUM coverage across assemblies. https://doi.org/10.1186/s13059-025-03644-0
+*Further reading:* Shivakumar & Langmead (2025) Mumemto: efficient maximal matching across pangenomes. https://doi.org/10.1186/s13059-025-03644-0
 
 ---
 
@@ -204,7 +204,7 @@ ropebwt3 hapdiv "$ATHALIANA_OUT/ropebwt3/rb3.fmd" "$ANALYSIS_DIR/flc_fa/"*extrac
 
 </details>
 
-*Further reading:* Li (2024) BWT construction and search at terabase scale — explains MEM and haplotype-diversity (`hapdiv`) queries against a multi-genome FM-index. https://doi.org/10.1093/bioinformatics/btae717
+*Further reading:* Li (2024) BWT construction and search at the terabase scale. https://doi.org/10.1093/bioinformatics/btae717
 
 ---
 
@@ -225,7 +225,7 @@ syngmap -o "$ANALYSIS_DIR/syngmap" -outputIds "$ATHALIANA_OUT/syng/syng.1khash" 
 
 </details>
 
-*Further reading:* Durbin (2026) Dynamic GBWTs over syncmer graphs (syng) — relates `syngmap` MEMs over syncmers to the GBWT you indexed in Practical 1. https://doi.org/10.64898/2026.03.26.714584
+*Further reading:* Durbin (2026) A run-length-compressed skiplist data structure for dynamic GBWTs supports time and space efficient pangenome operations over syncmers. https://doi.org/10.64898/2026.03.26.714584
 
 ---
 
@@ -273,7 +273,7 @@ Inputs: all-vs-all pairwise alignments (PAF), the corresponding FASTA sequences,
 
 Outputs: extracted homologous FASTA sequences aligned into a local GFA graph (`flc.gfa`)
 
-*Further reading:* Sorin et al. (2026) IMPG for locus projection in cattle — illustrates projecting a reference interval through pairwise alignments to homologous haplotypes before graph or sequence analysis. https://doi.org/10.1186/s12711-026-01037-w
+*Further reading:* Sorin et al. (2026) Pangenome-based association testing between a structural variant located upstream of the KIT gene and head depigmentation across a diverse panel of cattle breeds. https://doi.org/10.1186/s12711-026-01037-w
 
 ---
 
@@ -309,7 +309,7 @@ Inputs: a variation graph in GFA format
 
 Outputs: an SVG image of the graph layout
 
-*Further reading:* Wick et al. (2015) Bandage: interactive assembly-graph visualization — classic rationale for rendering GFA variation graphs such as your FLC `impg` output. https://doi.org/10.1093/bioinformatics/btv383
+*Further reading:* Wick et al. (2015) Bandage: interactive visualization of de novo genome assemblies. https://doi.org/10.1093/bioinformatics/btv383
 
 ---
 
@@ -360,7 +360,7 @@ Inputs: a variation graph in GFA format
 
 Outputs: an interactive HTML report (`flc_report.html`) with histogram and growth analyses
 
-*Further reading:* Parmigiani et al. (2024) Panacus: pangenome growth and core size — defines the coverage histogram and growth curves you generate from the FLC GFA. https://doi.org/10.1093/bioinformatics/btae720
+*Further reading:* Parmigiani et al. (2024) Panacus: fast and exact pangenome growth and core size estimation. https://doi.org/10.1093/bioinformatics/btae720
 
 ---
 
@@ -502,7 +502,7 @@ On course dry-run data, even with **50 kb** slack only a handful of reads are la
 
 </details>
 
-*Further reading:* Chang et al. (2025) vg Giraffe long- and short-read mapping — describes the long-read Giraffe workflow and why graph vs linear MHC indexes can yield different alignments for the same HiFi reads. https://doi.org/10.1101/2025.09.29.678807
+*Further reading:* Chang et al. (2025) Rapid, accurate long- and short-read mapping to large pangenome graphs with vg Giraffe. https://doi.org/10.1101/2025.09.29.678807
 
 ---
 
@@ -601,8 +601,8 @@ The shipped minigraph-cactus MHC graph can include **more samples than the five*
 
 On course data, the MC graph is typically about **~11 Mb** of S-line sequence versus **~24.6 Mb** input (**~0.45** ratio). The impg graph uses the same five assemblies and should compress as well, but totals can differ because it was built with `-o gfa:seqwish` without MC smoothing.
 
-*Further reading:* Hickey et al. (2024) Minigraph-Cactus pangenome graphs — describes how the shipped smoothed MHC graph was built and what topology to expect when you compare it to `impg`. https://doi.org/10.1038/s41587-023-01793-w
+*Further reading:* Hickey et al. (2024) Pangenome graph construction from genome alignments with Minigraph-Cactus. https://doi.org/10.1038/s41587-023-01793-w
 
-*Further reading:* Lucas et al. (2026) HPRC2 human pangenome reference — situates multi-haplotype MHC graphs in the broader HPRC Release 2 resource you are approximating with five haplotypes. https://doi.org/10.64898/2026.07.21.739710
+*Further reading:* Lucas et al. (2026) HPRC2: A human pangenome reference with near-complete coverage of common genetic variation. https://doi.org/10.64898/2026.07.21.739710
 
 ---
