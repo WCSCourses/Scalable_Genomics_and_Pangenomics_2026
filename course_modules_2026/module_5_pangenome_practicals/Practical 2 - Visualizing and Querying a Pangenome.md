@@ -144,8 +144,6 @@ Next, we can query a region of interest and extract syntenic regions across the 
 
 ```bash
 shredtools extract -o "$ANALYSIS_DIR/flc" -s 0 -r CP138175.1:3173000-3179000 --plot "$ATHALIANA_OUT/mumemto/mumemto.bumbl"
-# mumemto.lengths embeds absolute FASTA paths; rewrite to the /course mount layout if needed
-sed -i 's|/data/data/|/course/data/|g; s|/data/work/|/course/data/work/|g' "$ANALYSIS_DIR/flc.bed"
 ```
 
 </details>
