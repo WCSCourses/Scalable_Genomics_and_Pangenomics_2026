@@ -158,7 +158,7 @@ sed -i 's|/data/data/|/course/data/|g; s|/data/work/|/course/data/work/|g' "$ANA
 </details>
 
 <details>
-<summary>Example output (peek at <code>flc.bed</code>)</summary>
+<summary>Example output (flc.bed)</summary>
 
 ```bash
 head -n 10 "$ANALYSIS_DIR/flc.bed"
@@ -200,7 +200,7 @@ ropebwt3 mem "$ATHALIANA_OUT/ropebwt3/rb3.fmd" "$DATA/athaliana/reads/tanz1_1k.f
 </details>
 
 <details>
-<summary>Example output (peek at <code>read_mems.txt</code>)</summary>
+<summary>Example output (read_mems.txt)</summary>
 
 ```bash
 head -n 10 "$ANALYSIS_DIR/read_mems.txt"
@@ -238,7 +238,7 @@ ropebwt3 hapdiv "$ATHALIANA_OUT/ropebwt3/rb3.fmd" "$ANALYSIS_DIR/flc_fa/"*extrac
 </details>
 
 <details>
-<summary>Example output (peek at <code>hapdiv.txt</code>)</summary>
+<summary>Example output (hapdiv.txt)</summary>
 
 ```bash
 head -n 10 "$ANALYSIS_DIR/hapdiv.txt"
@@ -278,7 +278,7 @@ syngmap -o "$ANALYSIS_DIR/syngmap" -outputIds "$ATHALIANA_OUT/syng/syng.1khash" 
 </details>
 
 <details>
-<summary>Example output (peek at <code>syngmap.1map</code>)</summary>
+<summary>Example output (syngmap.1map)</summary>
 
 ```bash
 head -n 10 "$ANALYSIS_DIR/syngmap.1map"
@@ -339,7 +339,7 @@ impg query -i "$IMPG_IDX" -a "$IMPG_PAF" -r "CP138175.1:3173000-3179000" -d 1000
 </details>
 
 <details>
-<summary>Example output (peek at <code>flc.gfa</code>)</summary>
+<summary>Example output (flc.gfa)</summary>
 
 ```bash
 head -n 10 "$ANALYSIS_DIR/flc.gfa"
