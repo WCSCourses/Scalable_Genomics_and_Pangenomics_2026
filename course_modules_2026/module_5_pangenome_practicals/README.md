@@ -2,6 +2,8 @@
 
 Supplementary notes for the pre-built files under `data/` used in the pangenome practicals.
 
+**Docker image:** [npmalfoy/scalable:2026](https://hub.docker.com/r/npmalfoy/scalable) (`linux/amd64`). Typical session mount: `-v "$PWD:/course" -w /course`.
+
 ---
 
 ## MHC reference region (I002C)
@@ -39,11 +41,31 @@ fastq-dump -Z SRR36352204 \
 
 ## Pre-built human MHC graph (`data/human`)
 
-Building the MHC variation graph with `impg query` over the **5** human genomes (CHM13 region `chr6:28381448-33301940`, `-o gfa:seqwish`) took **124m19.699s** (~2 h 4 min).
+The shipped MHC variation graph is a **minigraph-cactus** build:
+
+```text
+data/human/mhc/mhc.full.gfa.gz
+```
+
+Pre-built `vg giraffe` long-read indexes for Practical 2 live under `data/human/vg_giraffe/` (e.g. `mhc/` and `mhc_chm13/`).
+
+> Note: an older course narrative timed an `impg query` / seqwish MHC GFA over 5 human genomes (~2 h). That impg-built `mhc.gfa` is **not** the shipped graph for this year; use `mhc.full.gfa.gz` (and the giraffe indexes above) instead.
 
 ---
 
 ## Pre-built *A. thaliana* datasets (`data/athaliana`)
+
+### Alignments (optional archive)
+
+Optional large download `alignments_athaliana.tar.gz` unpacks to a **single** all-vs-all PAF:
+
+```text
+data/athaliana/alignments.paf
+```
+
+The corresponding `.impg` index is **not** shipped — build it in Practical 1 with `impg index` (same pattern as the human alignments). Do not expect `alignments.paf.gz` or a pre-built `all.impg` in `course_data`.
+
+### Tool outputs layout
 
 Layout under `data/athaliana/tool_outputs/`:
 
@@ -52,7 +74,7 @@ Layout under `data/athaliana/tool_outputs/`:
 | `mumemto/` | `mumemto.bumbl`, `mumemto.bumbl.bi`, `mumemto.lengths` |
 | `ropebwt3/` | `rb3.fmd`, `rb3.fmr` |
 | `syng/` | `syng.1gbwt`, `syng.1khash`, `syng.1path` |
-| `panagram/` | panagram run dir without `kmc/` or `FASTAS/` (stage FASTAs from `athaliana_all.agc`) |
+| `panagram/` | panagram run dir without `kmc/` or `FASTAS/` (stage FASTAs from `athaliana_all.agc`; used in different practical) |
 
 Practical 2 points mumemto viz / shredtools extract at `$ATH_OUT/mumemto/…`.
 
