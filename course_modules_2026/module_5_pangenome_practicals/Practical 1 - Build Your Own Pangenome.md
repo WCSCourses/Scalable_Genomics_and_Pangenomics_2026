@@ -341,3 +341,18 @@ Outputs: long-read Giraffe indexes (e.g. `.giraffe.gbz`, `.dist`, and `.longread
 ## Next: Practical 2
 
 The indexes and tool outputs you wrote under `$OUT` (`/course/data/work`) — mumemto / ropebwt3 / syng under `tool_outputs/`, the impg index, and the Giraffe indexes under `vg_giraffe/` — are the inputs for **Practical 2** (visualizing and querying a pangenome). If a step was slow or you skipped it, use the matching pre-built files under `$DATA`.
+
+
+---
+
+
+
+## Reference: yeast solution outputs (optional)
+
+You do not need these for the practical. If you could not run the yeast builds above and just want to see what the outputs look like, reference copies of the mumemto / ropebwt3 / syng yeast indexes are shipped under:
+
+```text
+$DATA/yeast/tool_outputs/{mumemto,ropebwt3,syng}/
+```
+
+Practical 2 uses the *A. thaliana* pre-builts under `$DATA/athaliana/tool_outputs/`, not these yeast files.
