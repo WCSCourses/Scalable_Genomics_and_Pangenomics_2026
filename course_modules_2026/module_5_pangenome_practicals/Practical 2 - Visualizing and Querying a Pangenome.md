@@ -281,12 +281,13 @@ syngmap -o "$ANALYSIS_DIR/syngmap" -outputIds "$ATHALIANA_OUT/syng/syng.1khash" 
 <summary>Example output (syngmap.1map)</summary>
 
 ```bash
-head -n 10 "$ANALYSIS_DIR/syngmap.1map"
+ONEview "$ANALYSIS_DIR/syngmap.1map" | head -n 10
 ```
 
 ```text
 1 3 map 2 1
 ! 4 7 syngmap 3 2.0 217 /opt/tools/bin/syngmap -o /course/data/work/analysis/syngmap -outputIds /course/data/athaliana/tool_outputs/syng/syng.1khash /course/data/athaliana/tool_outputs/syng/syng.1gbwt /course/data/athaliana/reads/tanz1_1k.fq 19 2026-10-06_18:55:56
+! 4 7 ONEview 3 0.0 62 /opt/conda/envs/scalable_course/bin/ONEview /course/data/work/analysis/syngmap.1map 19 2026-10-06_20:55:24
 .
 < 52 /course/data/athaliana/tool_outputs/syng/syng.1khash 1
 < 51 /course/data/athaliana/tool_outputs/syng/syng.1gbwt 2
@@ -294,7 +295,6 @@ head -n 10 "$ANALYSIS_DIR/syngmap.1map"
 .
 ~ O S 2 3 INT 3 INT         query sequence: index in source file (1-based) length
 ~ D I 1 6 STRING            identifier from source file (if requested)
-~ D F 1 4 CHAR              filter: Z zero-length, Q quality, G poly-G (Illumina bad read)
 ```
 
 </details>
