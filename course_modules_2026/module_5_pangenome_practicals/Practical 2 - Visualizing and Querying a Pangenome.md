@@ -157,6 +157,28 @@ sed -i 's|/data/data/|/course/data/|g; s|/data/work/|/course/data/work/|g' "$ANA
 
 </details>
 
+<details>
+<summary>Example output (peek at <code>flc.bed</code>)</summary>
+
+```bash
+head -n 10 "$ANALYSIS_DIR/flc.bed"
+```
+
+```text
+CP138175.1	3173000	3178999	/course/data/work/athaliana_fastas/GCA_036942435.1_ASM3694243v1_genomic.fa
+CM072661.1	3200189	3206197	/course/data/work/athaliana_fastas/GCA_036926925.1_ASM3692692v1_genomic.fa
+CM072641.1	3205318	3211334	/course/data/work/athaliana_fastas/GCA_036926965.1_ASM3692696v1_genomic.fa
+CM072656.1	3206991	3213009	/course/data/work/athaliana_fastas/GCA_036926975.1_ASM3692697v1_genomic.fa
+CM072646.1	3184353	3190390	/course/data/work/athaliana_fastas/GCA_036927025.1_ASM3692702v1_genomic.fa
+CM072651.1	3187017	3193043	/course/data/work/athaliana_fastas/GCA_036927045.1_ASM3692704v1_genomic.fa
+CM072631.1	3170844	3176858	/course/data/work/athaliana_fastas/GCA_036927085.1_ASM3692708v1_genomic.fa
+CM072626.1	3205639	3211652	/course/data/work/athaliana_fastas/GCA_036927245.1_ASM3692724v1_genomic.fa
+CM072636.1	3169581	3175586	/course/data/work/athaliana_fastas/GCA_036927255.1_ASM3692725v1_genomic.fa
+CM072621.1	3194921	3200928	/course/data/work/athaliana_fastas/GCA_036927265.1_ASM3692726v1_genomic.fa
+```
+
+</details>
+
 ---
 
 
@@ -177,6 +199,28 @@ ropebwt3 mem "$ATHALIANA_OUT/ropebwt3/rb3.fmd" "$DATA/athaliana/reads/tanz1_1k.f
 
 </details>
 
+<details>
+<summary>Example output (peek at <code>read_mems.txt</code>)</summary>
+
+```bash
+head -n 10 "$ANALYSIS_DIR/read_mems.txt"
+```
+
+```text
+m64079_211006_084742/18/ccs	0	452	12
+m64079_211006_084742/18/ccs	439	458	2
+m64079_211006_084742/18/ccs	448	470	47
+m64079_211006_084742/18/ccs	450	471	40
+m64079_211006_084742/18/ccs	453	724	1
+m64079_211006_084742/18/ccs	467	983	2
+m64079_211006_084742/18/ccs	979	1564	2
+m64079_211006_084742/18/ccs	1565	2235	1
+m64079_211006_084742/18/ccs	1603	2301	6
+m64079_211006_084742/18/ccs	2300	3218	5
+```
+
+</details>
+
 
 Next, we can query an assembly against the index and compute kmer diversity with respect to the pangenome. This is helpful to identify regions that are highly similar or dissimilar in a query assembly with respect to the population. For this, we can use the `ropebwt3 hapdiv` command.
 
@@ -189,6 +233,28 @@ We've held out Tanz-1 from the ropebwt3 index (`$DATA/athaliana/holdout/Tanz-1.f
 grep Tanz-1 "$ANALYSIS_DIR/flc.bed" > "$ANALYSIS_DIR/flc_tanz.bed"
 shredtools fasta -o "$ANALYSIS_DIR/flc_fa" "$ANALYSIS_DIR/flc_tanz.bed"
 ropebwt3 hapdiv "$ATHALIANA_OUT/ropebwt3/rb3.fmd" "$ANALYSIS_DIR/flc_fa/"*extract*.fa > "$ANALYSIS_DIR/hapdiv.txt"
+```
+
+</details>
+
+<details>
+<summary>Example output (peek at <code>hapdiv.txt</code>)</summary>
+
+```bash
+head -n 10 "$ANALYSIS_DIR/hapdiv.txt"
+```
+
+```text
+CP138120.1:3204073-3210103	0	101	2	2	0	67	1	0	0	0	0
+CP138120.1:3204073-3210103	50	151	2	3	0	66	0	2	0	0	0
+CP138120.1:3204073-3210103	100	201	6	2	54	13	1	0	0	0	0
+CP138120.1:3204073-3210103	150	251	8	2	48	18	2	0	0	0	0
+CP138120.1:3204073-3210103	200	301	4	2	59	8	1	0	0	0	0
+CP138120.1:3204073-3210103	250	351	2	1	65	3	0	0	0	0	0
+CP138120.1:3204073-3210103	300	451	3	1	64	4	0	0	0	0	0
+CP138120.1:3204073-3210103	400	501	3	3	63	1	0	4	0	0	0
+CP138120.1:3204073-3210103	450	551	5	5	0	18	44	2	0	4	0
+CP138120.1:3204073-3210103	500	601	6	4	0	19	24	20	5	0	0
 ```
 
 </details>
@@ -207,6 +273,28 @@ We previously built a syncmer dictionary (`.1khash`) and GBWT (`.1gbwt`) with sy
 
 ```bash
 syngmap -o "$ANALYSIS_DIR/syngmap" -outputIds "$ATHALIANA_OUT/syng/syng.1khash" "$ATHALIANA_OUT/syng/syng.1gbwt" "$DATA/athaliana/reads/tanz1_1k.fq"
+```
+
+</details>
+
+<details>
+<summary>Example output (peek at <code>syngmap.1map</code>)</summary>
+
+```bash
+head -n 10 "$ANALYSIS_DIR/syngmap.1map"
+```
+
+```text
+1 3 map 2 1
+! 4 7 syngmap 3 2.0 217 /opt/tools/bin/syngmap -o /course/data/work/analysis/syngmap -outputIds /course/data/athaliana/tool_outputs/syng/syng.1khash /course/data/athaliana/tool_outputs/syng/syng.1gbwt /course/data/athaliana/reads/tanz1_1k.fq 19 2026-10-06_18:55:56
+.
+< 52 /course/data/athaliana/tool_outputs/syng/syng.1khash 1
+< 51 /course/data/athaliana/tool_outputs/syng/syng.1gbwt 2
+< 40 /course/data/athaliana/reads/tanz1_1k.fq 3
+.
+~ O S 2 3 INT 3 INT         query sequence: index in source file (1-based) length
+~ D I 1 6 STRING            identifier from source file (if requested)
+~ D F 1 4 CHAR              filter: Z zero-length, Q quality, G poly-G (Illumina bad read)
 ```
 
 </details>
@@ -246,6 +334,28 @@ Task: Query the FLC region (`CP138175.1:3173000-3179000`) from the *A. thaliana*
 
 ```bash
 impg query -i "$IMPG_IDX" -a "$IMPG_PAF" -r "CP138175.1:3173000-3179000" -d 1000 -x -o gfa --sequence-files "$ATHALIANA_FASTA_DIR"/*.fa -O "$ANALYSIS_DIR/flc"
+```
+
+</details>
+
+<details>
+<summary>Example output (peek at <code>flc.gfa</code>)</summary>
+
+```bash
+head -n 10 "$ANALYSIS_DIR/flc.gfa"
+```
+
+```text
+H	VN:Z:1.0
+S	1	CTTAAAAGAAAAAAATAGGTACAATTT
+S	2	A
+S	3	T
+S	4	CAAAAACATTCCTATATTATGCGCAAAGTGACAAGAAAAAGAAACAGCCCTATCAAAAGTTTTAGTTAG
+S	5	AT
+S	6	ATATATTAATTAAGTCGGTGCAATCAACTCTCGTTATCCATCGAGTATGATGCAACCGAAGAACAAG
+S	7	T
+S	8	G
+S	9	T
 ```
 
 </details>
@@ -319,13 +429,9 @@ panacus report "$ANALYSIS_DIR/flc_report.yaml" > "$ANALYSIS_DIR/flc_report.html"
 </details>
 
 <details>
-<summary>Example output (panacus FLC coverage & growth report)</summary>
+<summary>Example output (panacus growth plot)</summary>
 
-Open the course dry-run HTML report **locally in a browser** (from a checkout of this module, or after copying the file out of the container):
-
-[figures/p2_flc_panacus_report.html](figures/p2_flc_panacus_report.html)
-
-> Static PNG previews of individual panacus panels are not included; the report is interactive HTML (coverage histogram and growth curves).
+![Panacus growth curves for the FLC GFA (course dry-run)](figures/p2_flc_panacus_report.png)
 
 </details>
 
