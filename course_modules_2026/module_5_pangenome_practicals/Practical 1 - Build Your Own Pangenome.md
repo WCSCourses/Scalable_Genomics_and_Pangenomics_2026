@@ -17,7 +17,6 @@ In this practical session, we will run a few tools that “build” different no
 ---
 
 
-
 ## Learning objectives
 
 In this practical you will:
@@ -27,7 +26,6 @@ In this practical you will:
 3. Explain the pros and cons of each method and which method is appropriate for different types of pangenomes
 
 ---
-
 
 
 ## 0) Pull the docker container and datasets
@@ -87,7 +85,6 @@ For an added challenge, pick two datasets from above and compare the outputs.
 ---
 
 
-
 ## 1) Run each tool on your chosen dataset
 
 In this section, we will run each of the tools on a dataset of your choosing. We will provide pre-computed outputs for the following sections, as some tools may be slow or memory intensive on personal machines.
@@ -104,7 +101,6 @@ AGC=$DATASETS/yeast_t2t_haploid.agc
 FASTA_DIR=$OUT/fastas
 mkdir -p "$OUT" "$FASTA_DIR" "$OUT/tool_outputs"
 ```
-
 
 
 ### AGC
@@ -131,10 +127,7 @@ Inputs: an AGC archive (`.agc`)
 
 Outputs: a directory of FASTA files (one file per sample)
 
-*Further reading:* Deorowicz et al. (2023) AGC: compact representation of assembled genomes with fast queries and updates. https://doi.org/10.1093/bioinformatics/btad097
-
 ---
-
 
 
 ### Mumemto / Shredtools
@@ -201,10 +194,7 @@ mumemto view "$OUT/tool_outputs/mumemto/mumemto.bumbl" | awk '{s+=$1;n++} END{pr
 
 </details>
 
-*Further reading:* Shivakumar & Langmead (2025) Mumemto: efficient maximal matching across pangenomes. https://doi.org/10.1186/s13059-025-03644-0
-
 ---
-
 
 
 ### ropebwt3
@@ -243,10 +233,7 @@ Compute the size of the BWT
 ropebwt3 stat "$OUT/tool_outputs/ropebwt3/rb3.fmd"
 ```
 
-*Further reading:* Li (2024) BWT construction and search at the terabase scale. https://doi.org/10.1093/bioinformatics/btae717
-
 ---
-
 
 
 ### syng
@@ -275,10 +262,7 @@ Inputs: a set of FASTA files
 
 Outputs: syng path / kmer files (e.g. `.1path`) and a GBWT (`.1gbwt`)
 
-*Further reading:* Durbin (2026) A run-length-compressed skiplist data structure for dynamic GBWTs supports time and space efficient pangenome operations over syncmers. https://doi.org/10.64898/2026.03.26.714584
-
 ---
-
 
 
 ### impg
@@ -307,10 +291,9 @@ Inputs: all-vs-all pairwise alignments (PAF)
 
 Outputs: an `.impg` index
 
-*Further reading:* Sorin et al. (2026) Pangenome-based association testing between a structural variant located upstream of the KIT gene and head depigmentation across a diverse panel of cattle breeds. https://doi.org/10.1186/s12711-026-01037-w
+*Example of impg used in analyses:* Sorin et al. (2026) Pangenome-based association testing between a structural variant located upstream of the KIT gene and head depigmentation across a diverse panel of cattle breeds. https://doi.org/10.1186/s12711-026-01037-w
 
 ---
-
 
 
 ### vg
@@ -342,10 +325,7 @@ Inputs: a variation graph in GFA format (and optionally a linear FASTA)
 
 Outputs: long-read Giraffe indexes (e.g. `.giraffe.gbz`, `.dist`, and `.longread.withzip.min` / zipcode files)
 
-*Further reading:* Hickey et al. (2024) Pangenome graph construction from genome alignments with Minigraph-Cactus. https://doi.org/10.1038/s41587-023-01793-w
-
 ---
-
 
 
 ## Next: Practical 2
@@ -354,7 +334,6 @@ The indexes and tool outputs you wrote under `$OUT` (`/course/data/work`) — mu
 
 
 ---
-
 
 
 ## Reference: yeast solution outputs (optional)

@@ -20,7 +20,6 @@ In this practical you will:
 ---
 
 
-
 ## 0) Pull the docker container and datasets
 
 See the course informatics guide for full setup instructions. After unpacking the course archives into `datasets/` (AGCs) and `data/` (pre-built outputs) in your working directory, start an interactive session with the working directory mounted at `/course`:
@@ -68,7 +67,6 @@ mkdir -p data/work
 ```
 
 
-
 To test that the tools are installed and available:
 
 ```bash
@@ -76,9 +74,7 @@ which agc ropebwt3 syng impg BandageNG panacus vg mumemto shredtools minimap2
 ```
 
 
-
 ---
-
 
 
 ## 1) How to use each pangenome representation
@@ -113,9 +109,7 @@ ls "$ATHALIANA_FASTA_DIR" | head
 </details>
 
 
-
 ---
-
 
 
 ### Mumemto / Shredtools
@@ -143,7 +137,6 @@ mumemto viz -o "$ANALYSIS_DIR/mumemto.pdf" -i "$ATHALIANA_OUT/mumemto/mumemto" -
 </details>
 
 
-
 Next, we can query a region of interest and extract syntenic regions across the pangenome using `shredtools extract`. For this exercise, we will extract the FLC gene involved in flowering using the following region: `chr5:3,173,000–3,179,000`. Precomputed outputs live under `$ATHALIANA_OUT/mumemto/` (`mumemto.bumbl`, `mumemto.bumbl.bi`, `mumemto.lengths`).
 
 <details>
@@ -164,10 +157,7 @@ sed -i 's|/data/data/|/course/data/|g; s|/data/work/|/course/data/work/|g' "$ANA
 
 </details>
 
-*Further reading:* Shivakumar & Langmead (2025) Mumemto: efficient maximal matching across pangenomes. https://doi.org/10.1186/s13059-025-03644-0
-
 ---
-
 
 
 ### ropebwt3
@@ -188,7 +178,6 @@ ropebwt3 mem "$ATHALIANA_OUT/ropebwt3/rb3.fmd" "$DATA/athaliana/reads/tanz1_1k.f
 </details>
 
 
-
 Next, we can query an assembly against the index and compute kmer diversity with respect to the pangenome. This is helpful to identify regions that are highly similar or dissimilar in a query assembly with respect to the population. For this, we can use the `ropebwt3 hapdiv` command.
 
 We've held out Tanz-1 from the ropebwt3 index (`$DATA/athaliana/holdout/Tanz-1.fa`), but it is included in the mumemto collection so we can recover its FLC locus from the BED produced above. Pull that sequence with `shredtools fasta`, then run `hapdiv` on the short FLC FASTA (querying the full Tanz-1 genome is slow on a laptop).
@@ -204,10 +193,7 @@ ropebwt3 hapdiv "$ATHALIANA_OUT/ropebwt3/rb3.fmd" "$ANALYSIS_DIR/flc_fa/"*extrac
 
 </details>
 
-*Further reading:* Li (2024) BWT construction and search at the terabase scale. https://doi.org/10.1093/bioinformatics/btae717
-
 ---
-
 
 
 ### syng
@@ -225,10 +211,7 @@ syngmap -o "$ANALYSIS_DIR/syngmap" -outputIds "$ATHALIANA_OUT/syng/syng.1khash" 
 
 </details>
 
-*Further reading:* Durbin (2026) A run-length-compressed skiplist data structure for dynamic GBWTs supports time and space efficient pangenome operations over syncmers. https://doi.org/10.64898/2026.03.26.714584
-
 ---
-
 
 
 ### impg
@@ -268,15 +251,11 @@ impg query -i "$IMPG_IDX" -a "$IMPG_PAF" -r "CP138175.1:3173000-3179000" -d 1000
 </details>
 
 
-
 Inputs: all-vs-all pairwise alignments (PAF), the corresponding FASTA sequences, and a query interval
 
 Outputs: extracted homologous FASTA sequences aligned into a local GFA graph (`flc.gfa`)
 
-*Further reading:* Sorin et al. (2026) Pangenome-based association testing between a structural variant located upstream of the KIT gene and head depigmentation across a diverse panel of cattle breeds. https://doi.org/10.1186/s12711-026-01037-w
-
 ---
-
 
 
 ### BandageNG
@@ -304,15 +283,11 @@ BandageNG image "$ANALYSIS_DIR/flc.gfa" "$ANALYSIS_DIR/flc.svg"
 </details>
 
 
-
 Inputs: a variation graph in GFA format
 
 Outputs: an SVG image of the graph layout
 
-*Further reading:* Wick et al. (2015) Bandage: interactive visualization of de novo genome assemblies. https://doi.org/10.1093/bioinformatics/btv383
-
 ---
-
 
 
 ### panacus
@@ -355,15 +330,11 @@ Open the course dry-run HTML report **locally in a browser** (from a checkout of
 </details>
 
 
-
 Inputs: a variation graph in GFA format
 
 Outputs: an interactive HTML report (`flc_report.html`) with histogram and growth analyses
 
-*Further reading:* Parmigiani et al. (2024) Panacus: fast and exact pangenome growth and core size estimation. https://doi.org/10.1093/bioinformatics/btae720
-
 ---
-
 
 
 ### vg giraffe
@@ -502,10 +473,7 @@ On course dry-run data, even with **50 kb** slack only a handful of reads are la
 
 </details>
 
-*Further reading:* Chang et al. (2025) Rapid, accurate long- and short-read mapping to large pangenome graphs with vg Giraffe. https://doi.org/10.1101/2025.09.29.678807
-
 ---
-
 
 
 ## 2) Optional: build an MHC graph with impg and compare to [minigraph-cactus](https://github.com/ComparativeGenomicsToolkit/cactus/blob/master/doc/pangenome.md)
@@ -600,9 +568,5 @@ done
 The shipped minigraph-cactus MHC graph can include **more samples than the five** impg FASTAs; still use the same denominator (`MHC_BP × N` from `$FASTA_DIR`) so everyone compares graphs on equal footing in the classroom.
 
 On course data, the MC graph is typically about **~11 Mb** of S-line sequence versus **~24.6 Mb** input (**~0.45** ratio). The impg graph uses the same five assemblies and should compress as well, but totals can differ because it was built with `-o gfa:seqwish` without MC smoothing.
-
-*Further reading:* Hickey et al. (2024) Pangenome graph construction from genome alignments with Minigraph-Cactus. https://doi.org/10.1038/s41587-023-01793-w
-
-*Further reading:* Lucas et al. (2026) HPRC2: A human pangenome reference with near-complete coverage of common genetic variation. https://doi.org/10.64898/2026.07.21.739710
 
 ---
