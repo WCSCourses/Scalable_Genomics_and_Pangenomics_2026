@@ -75,11 +75,11 @@ which agc ropebwt3 syng impg BandageNG panacus vg mumemto shredtools minimap2
 
 We provided a few datasets to choose from depending on your computing setup and species of interest. We provide an AGC file for each dataset:
 
-- *A. thaliana* full genomes (n=5)
-- *A. thaliana* chr5 (n=5)
-- Human full genomes (n=5)
-- Human chr20 (n=5)
-- *S. cerevisiae* full genomes (n=22)
+- *A. thaliana* full genomes (n=5) (Lian et al., *Nat Genet* 2024; doi:[10.1038/s41588-024-01715-9](https://doi.org/10.1038/s41588-024-01715-9))
+- *A. thaliana* chr5 (n=5) (Lian et al., *Nat Genet* 2024)
+- Human full genomes (n=5) (Lucas et al., HPRC2; doi:[10.64898/2026.07.21.739710](https://doi.org/10.64898/2026.07.21.739710))
+- Human chr20 (n=5) (Lucas et al., HPRC2 2026)
+- *S. cerevisiae* full genomes (n=22) (O'Donnell et al., ScRAP; doi:[10.1038/s41588-023-01459-y](https://doi.org/10.1038/s41588-023-01459-y))
 
 You may also run any of the tools on your own dataset of interest!
 For an added challenge, pick two datasets from above and compare the outputs. 
@@ -131,13 +131,15 @@ Inputs: an AGC archive (`.agc`)
 
 Outputs: a directory of FASTA files (one file per sample)
 
+*Further reading:* Deorowicz et al. (2023) AGC: compact assembled-genome collections — explains why a single `.agc` archive is the practical’s starting point for decompressing many assemblies on demand. https://doi.org/10.1093/bioinformatics/btad097
+
 ---
 
 
 
 ### Mumemto / Shredtools
 
-[Mumemto](https://github.com/vikshiv/mumemto) reports maximal unique matches across a set of assemblies. These matches represent conserved columns in the underlying multiple sequence alignment. Shredtools is a companion tool to Mumemto that indexes the MUMs list for querying.
+[Mumemto](https://github.com/vikshiv/mumemto) reports maximal unique matches across a set of assemblies. These matches represent conserved columns in the underlying multiple sequence alignment. [Shredtools](https://github.com/vikshiv/shredtools) is a companion tool to Mumemto that indexes the MUMs list for querying.
 
 **Expect (yeast example):** mumemto ~2–3 min and ~2–3 GB RAM; shredtools filter/index a few seconds each and <0.5 GB.
 
@@ -199,7 +201,7 @@ mumemto view "$OUT/tool_outputs/mumemto/mumemto.bumbl" | awk '{s+=$1;n++} END{pr
 
 </details>
 
-
+*Further reading:* Shivakumar & Langmead (2025) Mumemto: maximal matching across pangenomes — motivates multi-MUMs as conserved columns and the `bumbl` + Shredtools index you build for later querying. https://doi.org/10.1186/s13059-025-03644-0
 
 ---
 
@@ -241,6 +243,8 @@ Compute the size of the BWT
 ropebwt3 stat "$OUT/tool_outputs/ropebwt3/rb3.fmd"
 ```
 
+*Further reading:* Li (2024) BWT construction and search at terabase scale — background on the dynamic `.fmr` → static `.fmd` FM-index you build over the assembly collection. https://doi.org/10.1093/bioinformatics/btae717
+
 ---
 
 
@@ -270,6 +274,8 @@ syngpath2gbwt "$OUT/tool_outputs/syng/syng.1path" "$OUT/tool_outputs/syng/syng.1
 Inputs: a set of FASTA files
 
 Outputs: syng path / kmer files (e.g. `.1path`) and a GBWT (`.1gbwt`)
+
+*Further reading:* Durbin (2026) Dynamic GBWTs over syncmer graphs (syng) — describes the syncmer path graph and GBWT indexing workflow behind `syng` + `syngpath2gbwt`. https://doi.org/10.64898/2026.03.26.714584
 
 ---
 
@@ -301,6 +307,8 @@ Inputs: all-vs-all pairwise alignments (PAF)
 
 Outputs: an `.impg` index
 
+*Further reading:* Sorin et al. (2026) IMPG for locus projection in cattle — example of indexing all-vs-all PAF and projecting a target interval for downstream sequence extraction (same pattern as your *A. thaliana* index step). https://doi.org/10.1186/s12711-026-01037-w
+
 ---
 
 
@@ -313,7 +321,7 @@ We provide a pre-shipped MHC graph in GFA format (minigraph-cactus) under `$DATA
 
 **Expect:** MHC GFA autoindex ~15–30 s and ~0.5–1 GB RAM; CHM13 linear autoindex a few seconds and ~0.5–1 GB.
 
-Task: Build a `vg giraffe` index from the MHC GFA. Also build an index for the CHM13 linear sequence.
+Task: Build a `vg giraffe` index from the MHC GFA (see the [Giraffe long-read mapping wiki](https://github.com/vgteam/vg/wiki/Mapping-long-reads-with-Giraffe)). Also build an index for the CHM13 linear sequence.
 
 ```bash
 mkdir -p "$OUT/vg_giraffe/mhc" "$OUT/vg_giraffe/mhc_chm13"
@@ -333,6 +341,8 @@ vg autoindex --workflow lr-giraffe -r "$DATA/human/mhc/mhc_chm13.fa" -p "$OUT/vg
 Inputs: a variation graph in GFA format (and optionally a linear FASTA)
 
 Outputs: long-read Giraffe indexes (e.g. `.giraffe.gbz`, `.dist`, and `.longread.withzip.min` / zipcode files)
+
+*Further reading:* Hickey et al. (2024) Minigraph-Cactus pangenome graphs — context for the shipped MHC variation graph and why `vg autoindex` targets a graph built from many haplotypes. https://doi.org/10.1038/s41587-023-01793-w
 
 ---
 
