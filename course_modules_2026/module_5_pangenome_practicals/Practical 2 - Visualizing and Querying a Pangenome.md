@@ -139,6 +139,8 @@ mumemto viz -o "$ANALYSIS_DIR/mumemto.pdf" -i "$ATHALIANA_OUT/mumemto/mumemto" -
 
 Next, we can query a region of interest and extract syntenic regions across the pangenome using `shredtools extract`. For this exercise, we will extract the FLC gene involved in flowering using the following region: `chr5:3,173,000–3,179,000`. Precomputed outputs live under `$ATHALIANA_OUT/mumemto/` (`mumemto.bumbl`, `mumemto.bumbl.bi`, `mumemto.lengths`).
 
+For human haplotypes, the same idea of translating a region across assemblies is available interactively in the [shredtools HPRC browser](https://vikshiv.github.io/shredtools/hprc/) (we use that later for the MHC / Giraffe step).
+
 <details>
 <summary>Show shredtools command</summary>
 
