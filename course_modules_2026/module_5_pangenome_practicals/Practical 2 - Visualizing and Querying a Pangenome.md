@@ -54,7 +54,7 @@ Inside the container, AGCs are under `/course/datasets`, pre-built outputs under
 | ----------------------------- | --------------- | ------------------------------------------------------------------------ |
 | `datasets_agc.tar.gz`         | yes             | AGC assemblies                                                           |
 | `course_data.tar.gz`          | yes             | pre-built indexes / tool outputs / reads / MHC graph                     |
-| `alignments_athaliana.tar.gz` | yes (~16G)      | `data/athaliana/alignments.paf` (needed for the `impg` step; Ath `.impg` is built in Practical 1, not shipped) |
+| `alignments_athaliana.tar.gz` | yes (~16G)      | `data/athaliana/alignments.paf` (needed for the `impg` step; the `.impg` index is built in Practical 1, not shipped) |
 | `alignments_human.tar.gz`     | optional (~5G)  | `data/human/alignments.paf`                                              |
 
 
@@ -83,19 +83,17 @@ which agc ropebwt3 syng impg BandageNG panacus vg mumemto shredtools minimap2
 
 ## 1) How to use each pangenome representation
 
-Following the previous practical, we will provide pre-built datasets for each step below. Set the shared paths once (indexes from Practical 1 under `$OUT` by default; fall back to the shipped `tool_outputs` if you did not finish those builds):
+Following the previous practical, we will use the shipped *A. thaliana* indexes under `data/athaliana/` for the steps below (Practical 1’s yeast builds are a different scale). Writable outputs go under `$OUT`. Set shared paths once:
 
 ```bash
 DATASETS=/course/datasets
 DATA=/course/data
 OUT=/course/data/work
-ATH_OUT=$OUT/tool_outputs
-# If you did not finish Practical 1 builds on Ath-scale data, use:
-# ATH_OUT=$DATA/athaliana/tool_outputs
-AGC=$DATASETS/athaliana_all.agc
-FASTA_DIR=$OUT/athaliana_fastas
+ATHALIANA_OUT=$DATA/athaliana/tool_outputs
+ATHALIANA_AGC=$DATASETS/athaliana_all.agc
+ATHALIANA_FASTA_DIR=$OUT/athaliana_fastas
 ANALYSIS_DIR=$OUT/analysis
-mkdir -p "$OUT" "$FASTA_DIR" "$ANALYSIS_DIR"
+mkdir -p "$OUT" "$ATHALIANA_FASTA_DIR" "$ANALYSIS_DIR"
 ```
 
 First, decompress the 68 *A. thaliana* assemblies from the AGC archive into a local FASTA directory:
@@ -106,10 +104,10 @@ First, decompress the 68 *A. thaliana* assemblies from the AGC archive into a lo
 <summary>Show AGC decompress command</summary>
 
 ```bash
-agc info "$AGC"
-agc listset "$AGC" | head
-agc getcol -o "$FASTA_DIR" "$AGC"
-ls "$FASTA_DIR" | head
+agc info "$ATHALIANA_AGC"
+agc listset "$ATHALIANA_AGC" | head
+agc getcol -o "$ATHALIANA_FASTA_DIR" "$ATHALIANA_AGC"
+ls "$ATHALIANA_FASTA_DIR" | head
 ```
 
 </details>
@@ -132,20 +130,20 @@ First, we will visualize the multi-MUM synteny of *A. thaliana* genomes. Since e
 <summary>Show mumemto command</summary>
 
 ```bash
-mumemto viz -o "$ANALYSIS_DIR/mumemto.pdf" -i "$ATH_OUT/mumemto/mumemto" --mode gapped
+mumemto viz -o "$ANALYSIS_DIR/mumemto.pdf" -i "$ATHALIANA_OUT/mumemto/mumemto" --mode gapped
 ```
 
 </details>
 
 
 
-Next, we can query a region of interest and extract syntenic regions across the pangenome using `shredtools extract`. For this exercise, we will extract the FLC gene involved in flowering using the following region: `chr5:3,173,000–3,179,000`. Precomputed outputs live under `$ATH_OUT/mumemto/` (`mumemto.bumbl`, `mumemto.bumbl.bi`, `mumemto.lengths`).
+Next, we can query a region of interest and extract syntenic regions across the pangenome using `shredtools extract`. For this exercise, we will extract the FLC gene involved in flowering using the following region: `chr5:3,173,000–3,179,000`. Precomputed outputs live under `$ATHALIANA_OUT/mumemto/` (`mumemto.bumbl`, `mumemto.bumbl.bi`, `mumemto.lengths`).
 
 <details>
 <summary>Show shredtools command</summary>
 
 ```bash
-shredtools extract -o "$ANALYSIS_DIR/flc" -s 0 -r CP138175.1:3173000-3179000 --plot "$ATH_OUT/mumemto/mumemto.bumbl"
+shredtools extract -o "$ANALYSIS_DIR/flc" -s 0 -r CP138175.1:3173000-3179000 --plot "$ATHALIANA_OUT/mumemto/mumemto.bumbl"
 # mumemto.lengths embeds absolute FASTA paths; rewrite to the /course mount layout if needed
 sed -i 's|/data/data/|/course/data/|g; s|/data/work/|/course/data/work/|g' "$ANALYSIS_DIR/flc.bed"
 ```
@@ -170,7 +168,7 @@ The first command is `mem`. We will query a set of reads against the index and f
 <summary>Show ropebwt3 mem command</summary>
 
 ```bash
-ropebwt3 mem "$ATH_OUT/ropebwt3/rb3.fmd" "$DATA/athaliana/reads/tanz1_1k.fq" > "$ANALYSIS_DIR/read_mems.txt"
+ropebwt3 mem "$ATHALIANA_OUT/ropebwt3/rb3.fmd" "$DATA/athaliana/reads/tanz1_1k.fq" > "$ANALYSIS_DIR/read_mems.txt"
 ```
 
 </details>
@@ -187,7 +185,7 @@ We've held out Tanz-1 from the ropebwt3 index (`$DATA/athaliana/holdout/Tanz-1.f
 ```bash
 grep Tanz-1 "$ANALYSIS_DIR/flc.bed" > "$ANALYSIS_DIR/flc_tanz.bed"
 shredtools fasta -o "$ANALYSIS_DIR/flc_fa" "$ANALYSIS_DIR/flc_tanz.bed"
-ropebwt3 hapdiv "$ATH_OUT/ropebwt3/rb3.fmd" "$ANALYSIS_DIR/flc_fa/"*extract*.fa > "$ANALYSIS_DIR/hapdiv.txt"
+ropebwt3 hapdiv "$ATHALIANA_OUT/ropebwt3/rb3.fmd" "$ANALYSIS_DIR/flc_fa/"*extract*.fa > "$ANALYSIS_DIR/hapdiv.txt"
 ```
 
 </details>
@@ -208,7 +206,7 @@ We previously built a syncmer dictionary (`.1khash`) and GBWT (`.1gbwt`) with sy
 <summary>Show syngmap command</summary>
 
 ```bash
-syngmap -o "$ANALYSIS_DIR/syngmap" -outputIds "$ATH_OUT/syng/syng.1khash" "$ATH_OUT/syng/syng.1gbwt" "$DATA/athaliana/reads/tanz1_1k.fq"
+syngmap -o "$ANALYSIS_DIR/syngmap" -outputIds "$ATHALIANA_OUT/syng/syng.1khash" "$ATHALIANA_OUT/syng/syng.1gbwt" "$DATA/athaliana/reads/tanz1_1k.fq"
 ```
 
 </details>
@@ -238,7 +236,7 @@ ls -lh "$IMPG_PAF" "$IMPG_IDX"
 
 If `alignments.paf` is missing, unpack that archive into your course directory (outside the container) and restart / remount so `/course/data/athaliana/alignments.paf` is visible.
 
-If the index is missing (you did not finish the Ath-scale `impg index` in Practical 1), rebuild it:
+If the index is missing (you did not finish the `impg index` step in Practical 1), rebuild it:
 
 ```bash
 impg index -a "$IMPG_PAF" -i "$IMPG_IDX"
@@ -250,7 +248,7 @@ Task: Query the FLC region (`CP138175.1:3173000-3179000`) from the *A. thaliana*
 <summary>Show impg command</summary>
 
 ```bash
-impg query -i "$IMPG_IDX" -a "$IMPG_PAF" -r "CP138175.1:3173000-3179000" -d 1000 -x -o gfa --sequence-files "$FASTA_DIR"/*.fa -O "$ANALYSIS_DIR/flc"
+impg query -i "$IMPG_IDX" -a "$IMPG_PAF" -r "CP138175.1:3173000-3179000" -d 1000 -x -o gfa --sequence-files "$ATHALIANA_FASTA_DIR"/*.fa -O "$ANALYSIS_DIR/flc"
 ```
 
 </details>

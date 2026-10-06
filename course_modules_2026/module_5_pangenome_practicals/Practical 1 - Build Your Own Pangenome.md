@@ -199,6 +199,8 @@ mumemto view "$OUT/tool_outputs/mumemto/mumemto.bumbl" | awk '{s+=$1;n++} END{pr
 
 </details>
 
+
+
 ---
 
 
@@ -277,7 +279,7 @@ Outputs: syng path / kmer files (e.g. `.1path`) and a GBWT (`.1gbwt`)
 
 [impg](https://github.com/pangenome/impg) indexes and enables querying of genomic intervals across a pangenome using all-vs-all pairwise genome alignments. Running all pairs alignments is slow without a multi-CPU machine, so for this step we provide pre-computed *A. thaliana* alignments (`alignments_athaliana.tar.gz` — unpacks to `data/athaliana/alignments.paf`). The index you build here is what you will use in Practical 2.
 
-**Expect (index only, shipped Ath PAF):** a few seconds; ~0.2 GB RAM. (Recomputing all-vs-all alignments is not required and is far slower.)
+**Expect (indexing step only):** a few seconds; ~0.2 GB RAM.
 
 Task: Build an `impg` index over the shipped *A. thaliana* all-vs-all PAF.
 
