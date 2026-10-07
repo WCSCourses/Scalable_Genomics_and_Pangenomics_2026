@@ -94,7 +94,7 @@ sudo docker run hello-world
 
 ### Setting up Course Docker / Singularity image 
 
-Pull the pre-built image from Docker Hub: [`npmalfoy/scalable:latest`](https://hub.docker.com/r/npmalfoy/scalable).
+Pull the pre-built image from Docker Hub: [`npmalfoy/scalable`](https://hub.docker.com/r/npmalfoy/scalable).
 
 Mount a local data directory (and an optional writable work directory) so tools can read inputs and write outputs outside the container.
 
@@ -116,7 +116,7 @@ Inside the container, tools are on `PATH`; read data from `/data/datasets` and w
 **Singularity / Apptainer:**
 
 ```bash
-apptainer pull scalable-course.sif docker://vikshiv/scalable-course:latest
+apptainer pull scalable-course.sif docker://npmalfoy/scalable:2026
 
 apptainer shell \
   --bind "$PWD/datasets:/data/datasets:ro,$PWD/work:/data/work" \
