@@ -94,7 +94,7 @@ sudo docker run hello-world
 
 ### Setting up Course Docker / Singularity image 
 
-Pull the pre-built image from Docker Hub: [`vikshiv/scalable-course:latest`](https://hub.docker.com/r/vikshiv/scalable-course).
+Pull the pre-built image from Docker Hub: [`npmalfoy/scalable:latest`](https://hub.docker.com/r/npmalfoy/scalable).
 
 Mount a local data directory (and an optional writable work directory) so tools can read inputs and write outputs outside the container.
 
