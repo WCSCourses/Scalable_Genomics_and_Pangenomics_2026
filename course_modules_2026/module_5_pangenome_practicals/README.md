@@ -69,13 +69,13 @@ Pre-built [`vg`](https://github.com/vgteam/vg) [Giraffe](https://github.com/vgte
 
 ### Alignments (optional archive)
 
-Optional large download `alignments_athaliana.tar.gz` unpacks to a **single** all-vs-all PAF:
+Optional large download `alignments_athaliana.tar.gz` unpacks to **pairwise** all-vs-all PAFs (one file per genome pair; useful later for synteny viewing):
 
 ```text
-data/athaliana/alignments.paf
+data/athaliana/alignments/*.paf
 ```
 
-The corresponding `.impg` index is **not** shipped — build it in Practical 1 with `impg index` (same pattern as the human alignments). Do not expect `alignments.paf.gz` or a pre-built `all.impg` in `course_data`.
+The corresponding `.impg` index is **not** shipped — build it in Practical 1 with `impg index --alignment-list` over those files (human stays a single `data/human/alignments.paf`). Do not expect a merged `alignments.paf` or a pre-built Ath `.impg` in `course_data`.
 
 ### Tool outputs layout
 

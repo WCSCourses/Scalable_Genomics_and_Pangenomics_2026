@@ -39,7 +39,7 @@ mkdir -p datasets
 tar -xzf datasets_agc.tar.gz -C datasets
 tar -xzf course_data.tar.gz
 # needed for impg index step:
-tar -xzf alignments_athaliana.tar.gz   # → data/athaliana/alignments.paf
+tar -xzf alignments_athaliana.tar.gz   # → data/athaliana/alignments/*.paf
 mkdir -p data/work
 ```
 
@@ -267,14 +267,15 @@ Outputs: syng path / kmer files (e.g. `.1path`) and a GBWT (`.1gbwt`)
 
 ### impg
 
-[impg](https://github.com/pangenome/impg) indexes and enables querying of genomic intervals across a pangenome using all-vs-all pairwise genome alignments. Running all pairs alignments is slow without a multi-CPU machine, so for this step we provide pre-computed *A. thaliana* alignments (`alignments_athaliana.tar.gz` — unpacks to `data/athaliana/alignments.paf`). The index you build here is what you will use in Practical 2.
+[impg](https://github.com/pangenome/impg) indexes and enables querying of genomic intervals across a pangenome using all-vs-all pairwise genome alignments. Running all pairs alignments is slow without a multi-CPU machine, so for this step we provide pre-computed *A. thaliana* alignments (`alignments_athaliana.tar.gz` — unpacks to pairwise PAFs under `data/athaliana/alignments/`). The index you build here is what you will use in Practical 2.
 
 **Expect (indexing step only):** a few seconds; ~0.2 GB RAM.
 
-Task: Build an `impg` index over the shipped *A. thaliana* all-vs-all PAF.
+Task: Build an `impg` index over the shipped *A. thaliana* all-vs-all pair PAFs.
 
 ```bash
-IMPG_PAF=$DATA/athaliana/alignments.paf
+IMPG_PAF_DIR=$DATA/athaliana/alignments
+IMPG_PAF_LIST=$OUT/ath_pafs.txt
 IMPG_IDX=$OUT/alignments.paf.impg
 ```
 
@@ -282,12 +283,13 @@ IMPG_IDX=$OUT/alignments.paf.impg
 <summary>Show impg index example command</summary>
 
 ```bash
-impg index -a "$IMPG_PAF" -i "$IMPG_IDX"
+find "$IMPG_PAF_DIR" -name '*.paf' | sort > "$IMPG_PAF_LIST"
+impg index --alignment-list "$IMPG_PAF_LIST" -i "$IMPG_IDX"
 ```
 
 </details>
 
-Inputs: all-vs-all pairwise alignments (PAF)
+Inputs: all-vs-all pairwise alignments (one PAF per genome pair)
 
 Outputs: an `.impg` index
 

@@ -53,15 +53,15 @@ Inside the container, AGCs are under `/course/datasets`, pre-built outputs under
 | ----------------------------- | --------------- | ------------------------------------------------------------------------ |
 | `datasets_agc.tar.gz`         | yes             | AGC assemblies                                                           |
 | `course_data.tar.gz`          | yes             | pre-built indexes / tool outputs / reads / MHC graph                     |
-| `alignments_athaliana.tar.gz` | yes (~16G)      | `data/athaliana/alignments.paf` (needed for the `impg` step; the `.impg` index is built in Practical 1, not shipped) |
-| `alignments_human.tar.gz`     | optional (~5G)  | `data/human/alignments.paf`                                              |
+| `alignments_athaliana.tar.gz` | yes (~1G)       | `data/athaliana/alignments/*.paf` (pairwise PAFs for `impg`; the `.impg` index is built in Practical 1, not shipped) |
+| `alignments_human.tar.gz`     | optional (~1G)  | `data/human/alignments.paf`                                              |
 
 
 ```bash
 mkdir -p datasets
 tar -xzf datasets_agc.tar.gz -C datasets
 tar -xzf course_data.tar.gz
-tar -xzf alignments_athaliana.tar.gz   # → data/athaliana/alignments.paf
+tar -xzf alignments_athaliana.tar.gz   # → data/athaliana/alignments/*.paf
 # optional: tar -xzf alignments_human.tar.gz
 mkdir -p data/work
 ```
@@ -309,22 +309,25 @@ We can project the same FLC gene region through the all-vs-all alignments, extra
 **Expect:** FLC `impg query` ~30 s; ~0.5 GB RAM. (Rebuilding the `.impg` index, if needed, is a few seconds.)
 
 ```bash
-IMPG_PAF=$DATA/athaliana/alignments.paf
+IMPG_PAF_DIR=$DATA/athaliana/alignments
+IMPG_PAF_LIST=$OUT/ath_pafs.txt
 IMPG_IDX=$OUT/alignments.paf.impg
 ```
 
-This step needs the *A. thaliana* PAF (`alignments_athaliana.tar.gz`) and the `.impg` index built in Practical 1 (`$IMPG_IDX`). Confirm both are present:
+This step needs the *A. thaliana* pair PAFs (`alignments_athaliana.tar.gz` → `$IMPG_PAF_DIR`) and the `.impg` index built in Practical 1 (`$IMPG_IDX`). Confirm both are present:
 
 ```bash
-ls -lh "$IMPG_PAF" "$IMPG_IDX"
+ls -lh "$IMPG_PAF_DIR"/*.paf | head
+ls -lh "$IMPG_IDX"
 ```
 
-If `alignments.paf` is missing, unpack that archive into your course directory (outside the container) and restart / remount so `/course/data/athaliana/alignments.paf` is visible.
+If the alignments directory is missing, unpack that archive into your course directory (outside the container) and restart / remount so `/course/data/athaliana/alignments/` is visible.
 
 If the index is missing (you did not finish the `impg index` step in Practical 1), rebuild it:
 
 ```bash
-impg index -a "$IMPG_PAF" -i "$IMPG_IDX"
+find "$IMPG_PAF_DIR" -name '*.paf' | sort > "$IMPG_PAF_LIST"
+impg index --alignment-list "$IMPG_PAF_LIST" -i "$IMPG_IDX"
 ```
 
 Task: Query the FLC region (`CP138175.1:3173000-3179000`) from the *A. thaliana* alignments and build a GFA graph of the homologous sequences.
@@ -333,7 +336,8 @@ Task: Query the FLC region (`CP138175.1:3173000-3179000`) from the *A. thaliana*
 <summary>Show impg command</summary>
 
 ```bash
-impg query -i "$IMPG_IDX" -a "$IMPG_PAF" -r "CP138175.1:3173000-3179000" -d 1000 -x -o gfa --sequence-files "$ATHALIANA_FASTA_DIR"/*.fa -O "$ANALYSIS_DIR/flc"
+find "$IMPG_PAF_DIR" -name '*.paf' | sort > "$IMPG_PAF_LIST"
+impg query -i "$IMPG_IDX" --alignment-list "$IMPG_PAF_LIST" -r "CP138175.1:3173000-3179000" -d 1000 -x -o gfa --sequence-files "$ATHALIANA_FASTA_DIR"/*.fa -O "$ANALYSIS_DIR/flc"
 ```
 
 </details>
