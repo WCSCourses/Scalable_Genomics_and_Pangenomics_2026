@@ -101,14 +101,14 @@ Mount a local data directory (and an optional writable work directory) so tools 
 **Docker** (interactive shell; adjust host paths as needed):
 
 ```bash
-docker pull vikshiv/scalable-course:latest
+docker pull npmalfoy/scalable:2026
 
 mkdir -p work
 docker run --rm -it \
   --platform linux/amd64 \
   -v "$PWD/datasets:/data/datasets:ro" \
   -v "$PWD/work:/data/work" \
-  vikshiv/scalable-course:latest
+  npmalfoy/scalable:2026
 ```
 
 Inside the container, tools are on `PATH`; read data from `/data/datasets` and write under `/data/work`. On Apple Silicon (or other arm64 hosts), keep `--platform linux/amd64`.
