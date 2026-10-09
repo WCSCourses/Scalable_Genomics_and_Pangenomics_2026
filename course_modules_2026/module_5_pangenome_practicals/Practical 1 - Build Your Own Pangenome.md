@@ -17,7 +17,6 @@ In this practical session, we will run a few tools that “build” different no
 ---
 
 
-
 ## Learning objectives
 
 In this practical you will:
@@ -27,7 +26,6 @@ In this practical you will:
 3. Explain the pros and cons of each method and which method is appropriate for different types of pangenomes
 
 ---
-
 
 
 ## 0) Pull the docker container and datasets
@@ -41,7 +39,7 @@ mkdir -p datasets
 tar -xzf datasets_agc.tar.gz -C datasets
 tar -xzf course_data.tar.gz
 # needed for impg index step:
-tar -xzf alignments_athaliana.tar.gz   # → data/athaliana/alignments.paf
+tar -xzf alignments_athaliana.tar.gz   # → data/athaliana/alignments/*.paf
 mkdir -p data/work
 ```
 
@@ -75,17 +73,16 @@ which agc ropebwt3 syng impg BandageNG panacus vg mumemto shredtools minimap2
 
 We provided a few datasets to choose from depending on your computing setup and species of interest. We provide an AGC file for each dataset:
 
-- *A. thaliana* full genomes (n=5)
-- *A. thaliana* chr5 (n=5)
-- Human full genomes (n=5)
-- Human chr20 (n=5)
-- *S. cerevisiae* full genomes (n=22)
+- *A. thaliana* full genomes (n=5) (Lian et al., *Nat Genet* 2024; doi:[10.1038/s41588-024-01715-9](https://doi.org/10.1038/s41588-024-01715-9))
+- *A. thaliana* chr5 (n=5) (Lian et al., *Nat Genet* 2024)
+- Human full genomes (n=5) (Lucas et al., HPRC2; doi:[10.64898/2026.07.21.739710](https://doi.org/10.64898/2026.07.21.739710))
+- Human chr20 (n=5) (Lucas et al., HPRC2 2026)
+- *S. cerevisiae* full genomes (n=22) (O'Donnell et al., ScRAP; doi:[10.1038/s41588-023-01459-y](https://doi.org/10.1038/s41588-023-01459-y))
 
 You may also run any of the tools on your own dataset of interest!
 For an added challenge, pick two datasets from above and compare the outputs. 
 
 ---
-
 
 
 ## 1) Run each tool on your chosen dataset
@@ -104,7 +101,6 @@ AGC=$DATASETS/yeast_t2t_haploid.agc
 FASTA_DIR=$OUT/fastas
 mkdir -p "$OUT" "$FASTA_DIR" "$OUT/tool_outputs"
 ```
-
 
 
 ### AGC
@@ -134,10 +130,9 @@ Outputs: a directory of FASTA files (one file per sample)
 ---
 
 
-
 ### Mumemto / Shredtools
 
-[Mumemto](https://github.com/vikshiv/mumemto) reports maximal unique matches across a set of assemblies. These matches represent conserved columns in the underlying multiple sequence alignment. Shredtools is a companion tool to Mumemto that indexes the MUMs list for querying.
+[Mumemto](https://github.com/vikshiv/mumemto) reports maximal unique matches across a set of assemblies. These matches represent conserved columns in the underlying multiple sequence alignment. [Shredtools](https://github.com/vikshiv/shredtools) is a companion tool to Mumemto that indexes the MUMs list for querying.
 
 **Expect (yeast example):** mumemto ~2–3 min and ~2–3 GB RAM; shredtools filter/index a few seconds each and <0.5 GB.
 
@@ -199,10 +194,7 @@ mumemto view "$OUT/tool_outputs/mumemto/mumemto.bumbl" | awk '{s+=$1;n++} END{pr
 
 </details>
 
-
-
 ---
-
 
 
 ### ropebwt3
@@ -244,7 +236,6 @@ ropebwt3 stat "$OUT/tool_outputs/ropebwt3/rb3.fmd"
 ---
 
 
-
 ### syng
 
 [syng](https://github.com/richarddurbin/syng) builds a syncmer graph of the assemblies. Syncmers are specially chosen kmers that cover the full sequence, and are often shared across a pangenome. To navigate the graph, syng also builds a GBWT, which enables rapid stepping through the graph for querying.
@@ -274,17 +265,17 @@ Outputs: syng path / kmer files (e.g. `.1path`) and a GBWT (`.1gbwt`)
 ---
 
 
-
 ### impg
 
-[impg](https://github.com/pangenome/impg) indexes and enables querying of genomic intervals across a pangenome using all-vs-all pairwise genome alignments. Running all pairs alignments is slow without a multi-CPU machine, so for this step we provide pre-computed *A. thaliana* alignments (`alignments_athaliana.tar.gz` — unpacks to `data/athaliana/alignments.paf`). The index you build here is what you will use in Practical 2.
+[impg](https://github.com/pangenome/impg) indexes and enables querying of genomic intervals across a pangenome using all-vs-all pairwise genome alignments. Running all pairs alignments is slow without a multi-CPU machine, so for this step we provide pre-computed *A. thaliana* alignments (`alignments_athaliana.tar.gz` — unpacks to pairwise PAFs under `data/athaliana/alignments/`). The index you build here is what you will use in Practical 2.
 
 **Expect (indexing step only):** a few seconds; ~0.2 GB RAM.
 
-Task: Build an `impg` index over the shipped *A. thaliana* all-vs-all PAF.
+Task: Build an `impg` index over the shipped *A. thaliana* all-vs-all pair PAFs.
 
 ```bash
-IMPG_PAF=$DATA/athaliana/alignments.paf
+IMPG_PAF_DIR=$DATA/athaliana/alignments
+IMPG_PAF_LIST=$OUT/ath_pafs.txt
 IMPG_IDX=$OUT/alignments.paf.impg
 ```
 
@@ -292,17 +283,19 @@ IMPG_IDX=$OUT/alignments.paf.impg
 <summary>Show impg index example command</summary>
 
 ```bash
-impg index -a "$IMPG_PAF" -i "$IMPG_IDX"
+find "$IMPG_PAF_DIR" -name '*.paf' | sort > "$IMPG_PAF_LIST"
+impg index --alignment-list "$IMPG_PAF_LIST" -i "$IMPG_IDX"
 ```
 
 </details>
 
-Inputs: all-vs-all pairwise alignments (PAF)
+Inputs: all-vs-all pairwise alignments (one PAF per genome pair)
 
 Outputs: an `.impg` index
 
----
+*Example of impg used in analyses:* Sorin et al. (2026) Pangenome-based association testing between a structural variant located upstream of the KIT gene and head depigmentation across a diverse panel of cattle breeds. https://doi.org/10.1186/s12711-026-01037-w
 
+---
 
 
 ### vg
@@ -313,7 +306,7 @@ We provide a pre-shipped MHC graph in GFA format (minigraph-cactus) under `$DATA
 
 **Expect:** MHC GFA autoindex ~15–30 s and ~0.5–1 GB RAM; CHM13 linear autoindex a few seconds and ~0.5–1 GB.
 
-Task: Build a `vg giraffe` index from the MHC GFA. Also build an index for the CHM13 linear sequence.
+Task: Build a `vg giraffe` index from the MHC GFA (see the [Giraffe long-read mapping wiki](https://github.com/vgteam/vg/wiki/Mapping-long-reads-with-Giraffe)). Also build an index for the CHM13 linear sequence.
 
 ```bash
 mkdir -p "$OUT/vg_giraffe/mhc" "$OUT/vg_giraffe/mhc_chm13"
@@ -337,14 +330,12 @@ Outputs: long-read Giraffe indexes (e.g. `.giraffe.gbz`, `.dist`, and `.longread
 ---
 
 
-
 ## Next: Practical 2
 
 The indexes and tool outputs you wrote under `$OUT` (`/course/data/work`) — mumemto / ropebwt3 / syng under `tool_outputs/`, the impg index, and the Giraffe indexes under `vg_giraffe/` — are the inputs for **Practical 2** (visualizing and querying a pangenome). If a step was slow or you skipped it, use the matching pre-built files under `$DATA`.
 
 
 ---
-
 
 
 ## Reference: yeast solution outputs (optional)
