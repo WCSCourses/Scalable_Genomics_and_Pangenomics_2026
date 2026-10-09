@@ -94,21 +94,21 @@ sudo docker run hello-world
 
 ### Setting up Course Docker / Singularity image 
 
-Pull the pre-built image from Docker Hub: [`vikshiv/scalable-course:latest`](https://hub.docker.com/r/vikshiv/scalable-course).
+Pull the pre-built image from Docker Hub: [`npmalfoy/scalable`](https://hub.docker.com/r/npmalfoy/scalable).
 
 Mount a local data directory (and an optional writable work directory) so tools can read inputs and write outputs outside the container.
 
 **Docker** (interactive shell; adjust host paths as needed):
 
 ```bash
-docker pull vikshiv/scalable-course:latest
+docker pull npmalfoy/scalable:2026
 
 mkdir -p work
 docker run --rm -it \
   --platform linux/amd64 \
   -v "$PWD/datasets:/data/datasets:ro" \
   -v "$PWD/work:/data/work" \
-  vikshiv/scalable-course:latest
+  npmalfoy/scalable:2026
 ```
 
 Inside the container, tools are on `PATH`; read data from `/data/datasets` and write under `/data/work`. On Apple Silicon (or other arm64 hosts), keep `--platform linux/amd64`.
@@ -116,7 +116,7 @@ Inside the container, tools are on `PATH`; read data from `/data/datasets` and w
 **Singularity / Apptainer:**
 
 ```bash
-apptainer pull scalable-course.sif docker://vikshiv/scalable-course:latest
+apptainer pull scalable-course.sif docker://npmalfoy/scalable:2026
 
 apptainer shell \
   --bind "$PWD/datasets:/data/datasets:ro,$PWD/work:/data/work" \
