@@ -300,11 +300,11 @@ FastK can profile input sequences using k-mer counts from a different table. Thi
 The `-p:<table>` option specifies the table used for profiling. For example:
 
 ```bash
-FastK -p:Mother Child.Reads.fasta -NChild_Mother
-FastK -p:Father Child.Reads.fasta -NChild_Father
+FastK -k21 -p:Mother course_data_2026/trio/Child.Reads.fasta -NChild_Mother
+FastK -k21 -p:Father course_data_2026/trio/Child.Reads.fasta -NChild_Father
 ```
 
-Use the actual table roots and input paths in your environment. The resulting profiles report counts from the specified reference table projected onto each input sequence; a profile value may be zero.
+The `-k` value must match the k-mer size of the table given to `-p:` (here 21); FastK's default is 40. Use the actual table roots and input paths in your environment. The resulting profiles report counts from the specified reference table projected onto each input sequence; a profile value may be zero.
 
 ### Task 7.1
 Generate a relative profile of the child reads against the mother table and against the father table.
