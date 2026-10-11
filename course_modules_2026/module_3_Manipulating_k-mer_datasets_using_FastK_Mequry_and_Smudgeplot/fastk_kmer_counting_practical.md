@@ -85,9 +85,11 @@ ANSWER
 Use `Histex` to print the histogram. Redirect the output to a tab-delimited file:
 
 ```bash
-Histex -G Child > Child.hist
-head Child.hist
+Histex -G Child > Child.genomescope.txt
+head Child.genomescope.txt
 ```
+
+Do not redirect into `Child.hist`: that is the histogram file FastK wrote and Histex reads, so overwriting it breaks every later `Histex Child` command.
 
 The histogram has two columns: k-mer coverage/count and the number of distinct k-mers observed at that count (frequency). The `-G` option produces a GenomeScope-ready histogram. The `-A` option requests tab-delimited ASCII output, while `-k` reports k-mer instances rather than the number of unique k-mers.
 
