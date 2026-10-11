@@ -34,14 +34,14 @@ FastK counts k-mers and produces a histogram by default. The `-k` option sets th
 Run FastK on the child reads using 21-mers, retaining k-mers with count at least 1 and requesting profiles:
 
 ```bash
-FastK -v -k21 -t1 -p -T4 course_data_2025/trio.5.40x/Child.Reads.fasta -NChild
+FastK -v -k21 -t1 -p -T4 course_data_2026/trio/Child.Reads.fasta -NChild
 ```
 
 Repeat for the mother and father reads:
 
 ```bash
-FastK -v -k21 -t1 -p -T4 course_data_2025/trio.5.40x/Mother.Reads.fasta -NMother
-FastK -v -k21 -t1 -p -T4 course_data_2025/trio.5.40x/Father.Reads.fasta -NFather
+FastK -v -k21 -t1 -p -T4 course_data_2026/trio/Mother.Reads.fasta -NMother
+FastK -v -k21 -t1 -p -T4 course_data_2026/trio/Father.Reads.fasta -NFather
 ```
 
 If the course dataset uses different filenames, substitute the actual paths. FastK accepts FASTA, FASTQ, SAM, BAM, and CRAM inputs; input files in a single run must be of the same type.
