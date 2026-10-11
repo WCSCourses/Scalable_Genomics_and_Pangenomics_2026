@@ -143,14 +143,14 @@ ANSWER
 `Tabex` can list entries in a k-mer table, check that the table is ordered correctly, or look up a particular k-mer.
 
 ```bash
-Tabex Child CHECK
-Tabex Child LIST
+Tabex -C Child
+Tabex Child 0-20
 ```
 
 To suppress entries whose counts are below a threshold:
 
 ```bash
-Tabex -t10 Child LIST
+Tabex -t10 Child 0-20
 ```
 
 To look up a particular k-mer, provide a sequence of the correct k-mer length for the table:
@@ -162,21 +162,21 @@ Tabex Child AAAAAAAAAAAAAAAAAAAAA
 The exact result depends on the dataset. A k-mer that is absent from the table is reported as not found. FastK tables contain canonical k-mers.
 
 ### Task 4.1
-Run `Tabex Child CHECK`. What does the tool report, and what is it checking?
+Run `Tabex -C Child`. What does the tool report, and what is it checking?
 
 **Answer**
 
 ANSWER
 
 ### Task 4.2
-List the table entries with `Tabex Child LIST`. Describe how the entries are ordered.
+List the table entries with `Tabex Child 0-20`. Describe how the entries are ordered.
 
 **Answer**
 
 ANSWER
 
 ### Task 4.3
-Run `Tabex -t10 Child LIST`. What does the threshold change about the displayed output?
+Run `Tabex -t10 Child 0-20`. What does the threshold change about the displayed output?
 
 **Answer**
 
