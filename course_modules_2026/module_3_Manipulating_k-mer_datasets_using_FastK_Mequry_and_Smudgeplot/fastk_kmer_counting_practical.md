@@ -251,6 +251,8 @@ Logex 'out=(A|+B)' Child Mother
 
 This writes a table named `out` using the sum-count union of the `Child` and `Mother` tables. Use quoted expressions so the shell passes the expression to Logex as one argument.
 
+If the output table already exists, Logex asks `Output table ./out.ktab already exists, continue?` and waits for an answer, so the terminal looks frozen. Type `y` to overwrite, or use a new output name for each task.
+
 ### Task 6.1
 Use Logex to create a union table containing k-mers found in either the child or mother table. Choose a count operator and explain what the operator does.
 
