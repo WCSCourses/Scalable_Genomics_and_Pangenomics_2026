@@ -239,6 +239,8 @@ ANSWER
 | `A - B` | Difference: k-mers present in A but not B |
 | `A ^ B` | Exclusive OR: k-mers present in one table but not both |
 
+`|` and `&` must be followed by `+`, `<`, `>`, `*` or `.` to say which count to keep (e.g. `A&<B`); plain `A&B` gives a "Modeless operator" error. `-` and `^` can be used as they are.
+
 For union and intersection, count operators specify how counts from k-mers present in both tables are combined. Examples include `|+` (sum), `|<` (minimum), `|>` (maximum), `|*` (average), `|.` (use the left count when present, otherwise the right), and `|-` (left count minus right count, with a minimum of zero). The same count modifiers can be used with intersection.
 
 A postfix range such as `[5-10]` retains k-mers whose counts are in that range. `[-10,20-]` retains counts from 1–10 or 20 and above. The prefix `#` changes all k-mer counts in a table to 1.
