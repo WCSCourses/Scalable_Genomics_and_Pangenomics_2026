@@ -2,18 +2,13 @@
 
 Before building alignments, graphs, or indexes, a common first pass on a genome collection is **sketching**: compress each assembly into a compact (generally) k-mer-based summary, then estimate all-pairs relatedness in seconds. That is the same idea behind [Mash](https://github.com/marbl/Mash) (Ondov et al., *Genome Biol* 2016; doi:[10.1186/s13059-016-0997-x](https://doi.org/10.1186/s13059-016-0997-x)). Here we use [sourmash](https://github.com/sourmash-bio/sourmash) (FracMinHash; Irber et al., *JOSS* 2024; doi:[10.21105/joss.06830](https://doi.org/10.21105/joss.06830)) as a Mash-family stand-in, and [dashing2](https://github.com/BenLangmead/dashing2) (Baker & Langmead, *Genome Biol* 2023; doi:[10.1186/s13059-023-02980-3](https://doi.org/10.1186/s13059-023-02980-3)) as a second sketch engine.
 
-Sketch distances are often turned into trees for ordering or visualisation (e.g. ntSynt-viz builds an NJ tree from Mash-like distances). Here that idea shows up as sourmash’s clustered heatmap + dendrogram — not a second tree-building tutorial.
-
 **Collection:** 22 full *S. cerevisiae* assemblies (O'Donnell et al., ScRAP; doi:[10.1038/s41588-023-01459-y](https://doi.org/10.1038/s41588-023-01459-y))
 
 **Docker Image with all the tools pre-installed:** [npmalfoy/scalable:2026](https://hub.docker.com/r/npmalfoy/scalable) (`linux/amd64`)
 
-**Course data (FTP):** [yeast_t2t_haploid.agc](https://ftp.ebi.ac.uk/pub/databases/metagenomics/research-team/shivakumar/scalable_course/yeast_t2t_haploid.agc) (sketching); [athaliana_all.agc](https://ftp.ebi.ac.uk/pub/databases/metagenomics/research-team/shivakumar/scalable_course/athaliana_all.agc) (ModDotPlot + optional Ath20)
+**Course data (FTP):** [yeast_t2t_haploid.agc](https://ftp.ebi.ac.uk/pub/databases/metagenomics/research-team/shivakumar/scalable_course/yeast_t2t_haploid.agc) (sketching); [athaliana_all.agc](https://ftp.ebi.ac.uk/pub/databases/metagenomics/research-team/shivakumar/scalable_course/athaliana_all.agc) (ModDotPlot + optional A. thaliana section)
 
 > Expected runtimes and memory below are rough guidelines from a dry-run on an Apple Silicon Mac (Docker `linux/amd64`). Your machine may differ. Yeast genomes are small (~12 Mb each), so sketching stays fast; all-pairs still grows as \(O(n^2)\).
->
-> Work top to bottom: copy each code block into the container and run it. You should not need to edit anything.
-
 ---
 
 ## Learning objectives
@@ -107,7 +102,7 @@ ls "$FASTA_DIR" | head
 cd "$FASTA_DIR"
 rm -f /course/yeast.sig.zip   # avoid merging into an old zip if re-running
 sourmash sketch dna -p k=31,scaled=1000 -o /course/yeast.sig.zip *.fa
-cd /course
+cd -
 
 sourmash compare yeast.sig.zip -o yeast.cmp --csv yeast.cmp.csv
 sourmash plot yeast.cmp --labels --output-dir /course
@@ -115,7 +110,7 @@ sourmash plot yeast.cmp --labels --output-dir /course
 ls -la yeast.cmp.matrix.png yeast.cmp.dendro.png yeast.cmp.hist.png
 ```
 
-Open `yeast.cmp.matrix.png` on the host (under your mounted course directory). Which genomes cluster with R64? Which look most distant?
+Open `yeast.cmp.matrix.png`. Which genomes cluster with R64? Which look most distant?
 
 <details>
 <summary>Example output (sourmash clustered matrix)</summary>
@@ -414,8 +409,6 @@ Open the two PNGs on the host in your mounted working directory.
 
 ![Ath20 clustered Jaccard matrix with region colour bar](figures/p3_ath20_matrix_by_region.png)
 
-**Asia (green)** forms a clear block. **Europe (blue)** has a Col-0 / Est-1 / St-0 / ws-4 core. **Africa (red)** is more split (Maghreb Elh-2 / Toufl-1 / Cvi-0 cluster; Zin9 / Taz-0 / Ice-1 sit farther out). **Admixed (purple)** Dog-4 / Nemrut-1 fall between Europe and Asia; Can-0 sits with the Maghreb Africa group — close to the Lian et al. geography story, not a perfect four-colour partition.
-
 </details>
 
 **Checkpoint:** Sketch Jaccard recovers broad geography (especially Asia) without alignments.
@@ -428,5 +421,3 @@ Open the two PNGs on the host in your mounted working directory.
 - **dashing2:** `d2_*.phy` — all-pairs similarity (or Mash distance) tables
 - **ModDotPlot Browser:** pairwise Col-0 vs Taz-0 (full assemblies) in Direction mode
 - *(Optional)* **Ath20:** extract 20 sets from `athaliana_all.agc` → sourmash → colour by geography
-
-Practical 4 zooms into a single yeast chromosome (chr14) with MUMs, pairwise PAFs, and pangenome graphs — a slower but much richer view than sketches alone.
