@@ -8,7 +8,7 @@ Sketch distances are often turned into trees for ordering or visualisation (e.g.
 
 **Docker Image with all the tools pre-installed:** [npmalfoy/scalable:2026](https://hub.docker.com/r/npmalfoy/scalable) (`linux/amd64`)
 
-**Course data (AGC):** [https://ftp.ebi.ac.uk/pub/databases/metagenomics/research-team/shivakumar/scalable_course/yeast_t2t_haploid.agc](https://ftp.ebi.ac.uk/pub/databases/metagenomics/research-team/shivakumar/scalable_course/yeast_t2t_haploid.agc)
+**Course data (FTP):** [yeast_t2t_haploid.agc](https://ftp.ebi.ac.uk/pub/databases/metagenomics/research-team/shivakumar/scalable_course/yeast_t2t_haploid.agc) (sketching); [athaliana_all.agc](https://ftp.ebi.ac.uk/pub/databases/metagenomics/research-team/shivakumar/scalable_course/athaliana_all.agc) (ModDotPlot + optional Ath20)
 
 > Expected runtimes and memory below are rough guidelines from a dry-run on an Apple Silicon Mac (Docker `linux/amd64`). Your machine may differ. Yeast genomes are small (~12 Mb each), so sketching stays fast; all-pairs still grows as \(O(n^2)\).
 >
@@ -23,7 +23,7 @@ In this practical you will:
 1. Sketch and compare 22 full yeast assemblies with sourmash (`sketch` → `compare` → `plot`)
 2. Run an all-pairs dashing2 comparison and inspect the similarity table
 3. Re-sketch with a few dashing2 settings (k, sketch size, multiset) and see what moves
-4. Open two assemblies in [ModDotPlot Browser](https://marbl.github.io/ModDotPlot-Browser/) and spot an inversion
+4. Open two *A. thaliana* assemblies in [ModDotPlot Browser](https://marbl.github.io/ModDotPlot-Browser/) and explore rearrangements
 5. *(Optional)* Sketch 20 geographically diverse *A. thaliana* assemblies and colour the tree by region
 
 ---
@@ -221,54 +221,60 @@ On the default / k=21 similarity runs, R64–AFH stays below R64–ADI. Shrink `
 
 ---
 
-## 5) ModDotPlot Browser — spot an inversion
+## 5) ModDotPlot Browser — structural view beyond sketches
 
-Sketches summarise whole-sequence relatedness; they do **not** show rearrangements. For a quick structural view, open chromosome XIV from **ADI** and **R64** in the browser-based [ModDotPlot Browser](https://marbl.github.io/ModDotPlot-Browser/) ([user guide](https://github.com/marbl/ModDotPlot-Browser/blob/main/docs/USER_GUIDE.md)). R64 carries a ~24 kb inverted block on chrXIV relative to ADI.
+Sketches summarise whole-sequence relatedness; they do **not** show rearrangements. For a structural view, open two full *A. thaliana* assemblies in the browser-based [ModDotPlot Browser](https://marbl.github.io/ModDotPlot-Browser/) ([user guide](https://github.com/marbl/ModDotPlot-Browser/blob/main/docs/USER_GUIDE.md)): **Col-0** (Europe) and **Taz-0** (Africa / Cape Verde) from Lian et al. (same AGC as the optional §6).
 
-First extract those two contigs inside the container (full assemblies are multi-contig; a single-contig pair is much easier in the browser):
+Download the AGC on the **host** (if you do not already have it), then extract the two sets inside the container:
 
 ```bash
+# host (course working directory) — skip if athaliana_all.agc is already present
+wget -c -O athaliana_all.agc \
+  https://ftp.ebi.ac.uk/pub/databases/metagenomics/research-team/shivakumar/scalable_course/athaliana_all.agc
+ls -lh athaliana_all.agc
+```
+
+```bash
+ATH_AGC=/course/athaliana_all.agc
 mkdir -p /course/moddotplot
 
-# ADI header contains "contig: chrXIV,"; R64 contains "chromosome XIV,"
-adi_id=$(awk '/^>/{id=substr($1,2)} /contig: chrXIV,/{print id; exit}' "$FASTA_DIR/ADI.fa")
-r64_id=$(awk '/^>/{id=substr($1,2)} /chromosome XIV,/{print id; exit}' "$FASTA_DIR/R64.fa")
-echo "ADI chrXIV: $adi_id"
-echo "R64 chrXIV: $r64_id"
-
-samtools faidx "$FASTA_DIR/ADI.fa" "$adi_id" | sed '1s/.*/>ADI_chrXIV/' > /course/moddotplot/ADI_chrXIV.fa
-samtools faidx "$FASTA_DIR/R64.fa" "$r64_id" | sed '1s/.*/>R64_chrXIV/' > /course/moddotplot/R64_chrXIV.fa
+agc getset -o /course/moddotplot/Col-0.fa "$ATH_AGC" GCA_036942435.1_ASM3694243v1_genomic
+agc getset -o /course/moddotplot/Taz-0.fa "$ATH_AGC" GCA_036941165.1_ASM3694116v1_genomic
 ls -lh /course/moddotplot/*.fa
 ```
 
 This step’s plot runs on the **host browser**, not inside Docker. From your course working directory on the host:
 
 ```text
-moddotplot/ADI_chrXIV.fa
-moddotplot/R64_chrXIV.fa
+moddotplot/Col-0.fa
+moddotplot/Taz-0.fa
 ```
 
 1. Open https://marbl.github.io/ModDotPlot-Browser/
-2. Drop `ADI_chrXIV.fa` and `R64_chrXIV.fa` on the FASTA target (plain FASTA is fine)
-3. Click **Explore** → choose a **Pairwise** plot with ADI on one axis and R64 on the other
+2. Drop `Col-0.fa` and `Taz-0.fa` on the FASTA target (plain FASTA is fine — full assemblies, no contig subsetting)
+3. Click **Explore** → choose a **Pairwise** plot with Col-0 on one axis and Taz-0 on the other
 4. Set **Color → Direction** (forward vs reverse matches)
-5. Zoom the off-diagonal **reverse** (pink) block — that is the inversion standing out against the forward diagonal
+5. Pan / zoom: look for off-diagonal **reverse** (pink) blocks and breaks in the forward diagonal — rearrangements and inversions that sketches cannot place
 
 > The browser is for exploration. For publication-quality figures, use the [ModDotPlot CLI](https://github.com/marbl/ModDotPlot) (Sweeten et al., *Bioinformatics* 2024; doi:[10.1093/bioinformatics/btae493](https://doi.org/10.1093/bioinformatics/btae493)).
 
-**Checkpoint:** Sketching said R64 and ADI are fairly close (~0.78 Jaccard); the dot plot shows *where* they still differ structurally.
+**Checkpoint:** Sketching collapses each genome to a relatedness number; the dot plot shows *where* two assemblies still differ structurally.
 
 ---
 
 ## 6) *(Optional)* Full-genome sketches — 20 *A. thaliana* assemblies
 
-Same sourmash workflow on larger assemblies: 20 geographically diverse accessions from `athaliana_all.agc` ([Lian et al., 2024](https://doi.org/10.1038/s41588-024-01715-9); doi:[10.1038/s41588-024-01715-9](https://doi.org/10.1038/s41588-024-01715-9)). Place that AGC in your working directory (from Practical 1’s `datasets_agc.tar.gz`), extract only these 20 into `ath20_fastas/`, sketch, then colour the tree by region.
+Same sourmash workflow on larger assemblies: 20 geographically diverse accessions from `athaliana_all.agc` ([Lian et al., 2024](https://doi.org/10.1038/s41588-024-01715-9); doi:[10.1038/s41588-024-01715-9](https://doi.org/10.1038/s41588-024-01715-9)). Reuse the AGC downloaded in §5 (or download it from the course FTP if you skipped ModDotPlot), extract these 20 into `ath20_fastas/`, sketch, then colour the tree by region.
 
 **Expect:** ~1–1.5 min to sketch; extract / compare / colour a few seconds–1 min.
 
 ```bash
 ATH_AGC=/course/athaliana_all.agc
 ATH_FASTA=/course/ath20_fastas
+
+# if you skipped §5:
+# wget -c -O athaliana_all.agc \
+#   https://ftp.ebi.ac.uk/pub/databases/metagenomics/research-team/shivakumar/scalable_course/athaliana_all.agc
 
 mkdir -p "$ATH_FASTA"
 ls -lh "$ATH_AGC"
@@ -420,7 +426,7 @@ Open the two PNGs on the host in your mounted working directory.
 
 - **sourmash:** `yeast.cmp.matrix.png` — clustered Jaccard heatmap + dendrogram for 22 full yeast assemblies
 - **dashing2:** `d2_*.phy` — all-pairs similarity (or Mash distance) tables
-- **ModDotPlot Browser:** pairwise ADI vs R64 chrXIV in Direction mode (inversion)
+- **ModDotPlot Browser:** pairwise Col-0 vs Taz-0 (full assemblies) in Direction mode
 - *(Optional)* **Ath20:** extract 20 sets from `athaliana_all.agc` → sourmash → colour by geography
 
 Practical 4 zooms into a single yeast chromosome (chr14) with MUMs, pairwise PAFs, and pangenome graphs — a slower but much richer view than sketches alone.
