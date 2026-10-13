@@ -86,7 +86,7 @@ Layout under `data/athaliana/tool_outputs/`:
 | `mumemto/` | `mumemto.bumbl`, `mumemto.bumbl.bi`, `mumemto.lengths` |
 | `ropebwt3/` | `rb3.fmd`, `rb3.fmr` |
 | `syng/` | `syng.1gbwt`, `syng.1khash`, `syng.1path` |
-| `panagram/` | [panagram](https://github.com/kjenike/panagram) run dir without `kmc/` or `FASTAS/` (stage FASTAs from `athaliana_all.agc`; archived Practical 3 starter only — current Practical 3 is sketching on `yeast_chr14`) |
+| `panagram/` | [panagram](https://github.com/kjenike/panagram) run dir without `kmc/` or `FASTAS/` (stage FASTAs from `athaliana_all.agc`; archived Practical 3 starter only — current Practical 3 downloads `yeast_t2t_haploid.agc` and extracts to `fastas/`) |
 
 Practical 2 points mumemto viz / shredtools extract at `$ATH_OUT/mumemto/…`.
 
