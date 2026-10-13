@@ -218,7 +218,7 @@ On the default / k=21 similarity runs, R64–AFH stays below R64–ADI. Shrink `
 
 ## 5) ModDotPlot Browser — structural view beyond sketches
 
-Sketches summarise whole-sequence relatedness; they do **not** show rearrangements. For a structural view, open two full *A. thaliana* assemblies in the browser-based [ModDotPlot Browser](https://marbl.github.io/ModDotPlot-Browser/) ([user guide](https://github.com/marbl/ModDotPlot-Browser/blob/main/docs/USER_GUIDE.md)): **Col-0** (Europe) and **Taz-0** (Africa / Cape Verde) from Lian et al. (same AGC as the optional §6).
+The sketches we've been using up until now are concise representations of the kmer composition of assemblies. This is great to summarise whole-sequence relatedness; they do **not** show rearrangements. For a structural view, open two full *A. thaliana* assemblies in the browser-based [ModDotPlot Browser](https://marbl.github.io/ModDotPlot-Browser/) ([user guide](https://github.com/marbl/ModDotPlot-Browser/blob/main/docs/USER_GUIDE.md)): **Col-0** (Europe) and **Taz-0** (Africa / Cape Verde) from Lian et al. (same AGC as the optional §6).
 
 Download the AGC on the **host** (if you do not already have it), then extract the two sets inside the container:
 
