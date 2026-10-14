@@ -101,7 +101,7 @@ ls "$FASTA_DIR" | head
 ```bash
 cd "$FASTA_DIR"
 rm -f /course/yeast.sig.zip   # avoid merging into an old zip if re-running
-sourmash sketch dna -p k=31,scaled=1000 -o /course/yeast.sig.zip *.fa
+sourmash sketch dna -p k=31,scaled=1024 -o /course/yeast.sig.zip *.fa
 cd -
 
 sourmash compare yeast.sig.zip -o yeast.cmp --csv yeast.cmp.csv
