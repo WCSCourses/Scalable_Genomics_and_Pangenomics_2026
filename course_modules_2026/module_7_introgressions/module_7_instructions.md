@@ -12,7 +12,7 @@ By the end of this exercise, you should be able to:
 * Identify genomic regions that could be candidates for introgression.
 
 
-## 1.5 How the data/pangenome was made
+## 0. How the data/pangenome was made
 
 To facilitate a smooth and fast practical, I have already run a set of *S. aethiopicum* genomes plus 1 *S. anguivi* genome through Panagram. [**Panagram**](https://github.com/kjenike/panagram)
 
@@ -49,6 +49,8 @@ The next step is to run the indexing, which uses snakemake.
 ```
 snakemake --cores 12 all
 ```
+
+With 12 cores it took about 32 minutes to run these 12 genomes through Panagram. 
 
 ## 1. Download the data
 
