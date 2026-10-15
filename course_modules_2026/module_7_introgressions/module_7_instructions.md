@@ -142,7 +142,7 @@ Inspect the resulting plots and note any similarities or differences compared wi
 ```
 python query_pankmer_bitmap.py \
                 --anchor Solang8 \
-                --all-chromosomes
+                --all-chromosomes \
                 --index-dir . \
                 --font-size 20 \
                 --width 600 \
