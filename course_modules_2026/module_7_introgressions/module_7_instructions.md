@@ -54,7 +54,6 @@ snakemake --cores 12 all
 ```
 
 With 12 cores it took about 32 minutes to run a 12 genome pangenome through Panagram. 
-
 <details>
 
 ## 1. Download the data
