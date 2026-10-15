@@ -14,7 +14,7 @@ By the end of this exercise, you should be able to:
 
 ## 0. How the data/pangenome was made
 
-To facilitate a smooth and fast practical, I have already run a set of *S. aethiopicum* genomes plus 1 *S. anguivi* genome through [**Panagram**].(https://github.com/kjenike/panagram)
+To facilitate a smooth and fast practical, I have already run a set of *S. aethiopicum* genomes plus 1 *S. anguivi* genome through [**Panagram**](https://github.com/kjenike/panagram).
 
 If you really, really want to run through everything on your own you can download the data here. 
 
