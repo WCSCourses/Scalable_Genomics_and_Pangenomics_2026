@@ -14,9 +14,6 @@ By the end of this exercise, you should be able to:
 
 ## 0. How the data/pangenome was made
 
-<details>
-<summary>Full panagram run information</summary>
-
 To facilitate a smooth and fast practical, I have already run a set of *S. aethiopicum* genomes plus 1 *S. anguivi* genome through [**Panagram**](https://github.com/kjenike/panagram).
 
 If you really, really want to run through everything on your own you can download the data here. 
@@ -54,7 +51,7 @@ snakemake --cores 12 all
 ```
 
 With 12 cores it took about 32 minutes to run a 12 genome pangenome through Panagram. 
-<details>
+
 
 ## 1. Download the data
 
