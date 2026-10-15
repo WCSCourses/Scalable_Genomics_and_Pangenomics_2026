@@ -50,7 +50,8 @@ The next step is to run the indexing, which uses snakemake.
 snakemake --cores 12 all
 ```
 
-With 12 cores it took about 32 minutes to run these 12 genomes through Panagram. 
+With 12 cores it took about 32 minutes to run a 12 genome pangenome through Panagram. 
+
 
 ## 1. Download the data
 
@@ -71,6 +72,10 @@ cd introgression_practical
 ```
 
 Make sure the data is there! Do you see a directory called "anchor"? 
+
+Open the samples.tsv file. There are 12 samples, 11 of which are *S. aethiopicum* accessions while the last sample (named Solang8) is *S. anguivi*. 
+
+The first sample, named Saethiopicum, is the reference *S. aethiopicum*. 
 
 ## 2. Explore the query script
 
