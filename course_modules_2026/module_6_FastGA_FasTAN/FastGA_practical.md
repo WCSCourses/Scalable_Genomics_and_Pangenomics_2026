@@ -291,10 +291,56 @@ Run each command with no arguments to see its options.
 
 ## Part 3: Tandem repeats with FasTAN
 
-FasTAN looks for off-diagonal self-alignments that indicate tandem repeats, with unit sizes up to 30 kb and up to ~20 to 25% divergence. It writes a `.1aln` file, which can be turned into a `.bed` with alntools or into a `.1ano` annotation.
+FasTAN looks for off-diagonal self-alignments that indicate tandem repeats, with unit sizes up to 30 kb and up to ~20 to 25% divergence. The options `-vamp` mean: verbose, write the alignments to a `.1aln` file (`-a`), write the tandem array intervals to a `.1ano` annotation file (`-m`), and parse each array into units (`-p`). `-o` sets the output name.
 
 ```bash
-FasTAN -v col0 col0-tan.1aln
+FasTAN -vamp -ocol0-tan col0
+```
+
+It reuses `col0.1gdb` from Part 2, and takes about 20 s on 4 cores. With progress lines removed, the output is:
+
+```
+  Database loaded, begin scan of 57 contigs
+  Resources for phase:  1:13.770u  0.069s  20.945w  352.5%
+  Total Resources:  1:13.770u  0.069s  20.945w  352.5%  0MB
+```
+
+and it writes `col0-tan.1aln` and `col0-tan.1ano`.
+
+We will now run a set of tools from the **alntools** repository, <https://github.com/richarddurbin/alntools>, which has documentation for each of them. First convert the FasTAN alignments into a BED file with `tanbed`:
+
+```bash
+tanbed col0-tan.1aln > col0-tan.bed
+```
+
+```
+read GDB from col0-tan.1aln : 5 seqs 57 contigs (52 gaps), totSeq 129256504 totCtg 129249752 (99.995%)
+processed 17332 alignments total length 14574609 from col0-tan.1aln length 129256504 (11.3 %)
+```
+
+Each line of the BED file is one tandem array: sequence, start, end, unit size, and identity between adjacent units (per thousand):
+
+```bash
+head col0-tan.bed
+```
+
+```
+CP138171.1	0	1017	7	957
+CP138171.1	1140	2982	7	942
+CP138171.1	7203	7241	2	894
+CP138171.1	9483	9586	31	883
+CP138171.1	10904	10930	2	961
+CP138171.1	11582	11613	2	1000
+CP138171.1	14830	14874	9	886
+CP138171.1	19949	20392	220	993
+CP138171.1	21477	21571	20	797
+CP138171.1	23423	23450	2	962
+```
+
+To total the bases in arrays by unit size:
+
+```bash
+awk '{n[$4] += $3-$2} END {for (u in n) print n[u], u}' col0-tan.bed | sort -nr | head
 ```
 
 **Explore**
@@ -303,6 +349,73 @@ FasTAN -v col0 col0-tan.1aln
 * What are the commonest repeat unit sizes? Is there a dominant unit size forming a large array on each chromosome? That is your candidate centromere repeat. (The Arabidopsis centromere repeat, CEN180, is about 178 bp.)
 * Where are those arrays? Do they coincide with the gaps in Col-0 vs Cvi-0 alignment coverage from Part 1?
 * Try the same on `cvi1`. Are the centromere arrays the same size?
+
+### Consensus sequences of the repeat units
+
+Now run `tancons` with its default settings. This builds a consensus sequence for each tandem repeat array that has more than 100 copies of exactly the unit length, using the parse in the `.1ano` file:
+
+```bash
+tancons col0-tan > col0-tan-cons.fa
+grep -c '>' col0-tan-cons.fa
+grep '>' col0-tan-cons.fa | less
+```
+
+There are 75 consensus sequences, in decreasing order of number of copies. Each name gives the unit size, the array location, the number of copies used, and the average percent agreement with the consensus:
+
+```
+>cons178#CP138172.1:4018135-4628690#2865#96.6
+>cons178#CP138171.1:15765453-16237848#2140#97.0
+>cons178#CP138174.1:4323651-4837748#2031#93.4
+>cons178#CP138172.1:3609365-3999372#1965#96.0
+>cons178#CP138175.1:12697212-13080462#1599#95.1
+>cons178#CP138171.1:16335357-16726460#1531#95.4
+>cons178#CP138172.1:5201020-5511124#1449#95.7
+>cons178#CP138171.1:14925357-15185482#1139#95.0
+...
+>cons178#CP138175.1:12388576-12410882#111#95.5
+>cons159#CP138171.1:14505278-14529810#108#87.4
+>cons178#CP138174.1:5484807-5504768#106#96.6
+>cons178#CP138171.1:14902620-14923594#100#94.3
+```
+
+Many of these arrays are presumably the same repeat. `satmatch` aligns all the consensus sequences against each other, in both orientations and allowing any rotation (`-loop`), clusters them into families, and writes one representative per family to `satfams.fa`:
+
+```bash
+satmatch -loop -fa satfams.fa col0-tan-cons.fa > col0-satmatch.txt
+```
+
+```
+75 sequences, total length 13231
+found 1 frequency-based clusters
+threshold 0.676
+user	0.290742	system	0.000000	elapsed 0.291912	alloc_max 16 MB	max_RSS	8
+```
+
+`col0-satmatch.txt` lists the clusters and their members (here shortened, and without the `mark` lines that record clusters being built):
+
+```
+cluster 1 count 72 minLen 178 repLen 178 tccatatgagtctttggct...
+  cons178#CP138172.1:4018135-4628690#2865#96.6	178	0
+  cons178#CP138171.1:15765453-16237848#2140#97.0	178	0
+  cons178#CP138174.1:4323651-4837748#2031#93.4	178	0
+  ...
+cluster 2 count 2 minLen 159 repLen 159 caaaagaggctaaaaccaac...
+  cons159#CP138171.1:14452467-14497647#171#84.5	159	0
+  cons159#CP138171.1:14505278-14529810#108#87.4	159	0
+```
+
+```bash
+cat satfams.fa
+```
+
+```
+>sat-1-178
+tccatatgagtctttggctttgtgtcttctaacaaggaaacactacttaggcttttaagatcgggttgcg...
+>sat-2-159
+caaaagaggctaaaaccaacaaaaaattgcttagaagcagtaaatagctttgttagtgtttttatggtca...
+```
+
+(sequences cut short here). The 72 arrays with 178 bp units collapse to a single family, the CEN180 centromere repeat, and a second family of 159 bp units comes from two arrays on chromosome 1. The one 97 bp consensus did not join any cluster, so it has no representative.
 
 ## Going further
 
