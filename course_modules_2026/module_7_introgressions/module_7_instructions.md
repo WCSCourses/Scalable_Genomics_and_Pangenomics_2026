@@ -78,7 +78,7 @@ The directory contains a script called `query_pankmer_bitmap.py`. This script us
 
 Start by exploring the script's help message:
 
-```bash
+```
 python query_pankmer_bitmap.py --help
 ```
 
@@ -101,7 +101,8 @@ Using the options you discovered in the previous section, run the script to plot
 <details>
 <summary>The command I would recommend</summary>
 
-python query_cleaned.py \
+```
+python query_pankmer_bitmap.py \
                 --anchor Saethiopicum \
                 --all-chromosomes
                 --index-dir . \
@@ -110,7 +111,7 @@ python query_cleaned.py \
                 --height 400 \
                 --png-scale 2 \
                 --formats png
-
+```
 </details>
 
 Inspect the resulting plots.
@@ -133,7 +134,8 @@ Inspect the resulting plots and note any similarities or differences compared wi
 <details>
 <summary>The command I would recommend</summary>
 
-python query_cleaned.py \
+```
+python query_pankmer_bitmap.py \
                 --anchor Solang8 \
                 --all-chromosomes
                 --index-dir . \
@@ -142,6 +144,7 @@ python query_cleaned.py \
                 --height 400 \
                 --png-scale 2 \
                 --formats png
+```
 
 </details>
 
@@ -150,6 +153,10 @@ python query_cleaned.py \
 * How do the bitmap patterns compare between the two species?
 * Are there regions that appear similar in one species but different in the other?
 * Do any patterns suggest that particular genomic regions may have a different or unexpected evolutionary history?
+
+In case you are unable to run the querying all of the outputs are located here: 
+
+https://github.com/WCSCourses/Scalable_Genomics_and_Pangenomics_2026/tree/main/course_modules_2026/module_7_introgressions/Solanum_plots
 
 ## 5. Identify candidate introgressions
 
@@ -165,9 +172,7 @@ For each candidate region, record:
 * **Chromosome:** Where is the region located?
 * **Approximate position:** What genomic interval does it span?
 * **Evidence:** What pattern makes the region interesting?
-* **Interpretation:** Why might this region be a candidate for introgression?
-
-Remember that **an unusual bitmap pattern is a clue, not proof of introgression**. 
+* **Interpretation:** Why might this region be a candidate for introgression? 
 
 ## 6. Discussion
 
