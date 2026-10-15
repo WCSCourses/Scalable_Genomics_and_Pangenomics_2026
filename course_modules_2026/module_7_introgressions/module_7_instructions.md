@@ -109,7 +109,7 @@ Using the options you discovered in the previous section, run the script to plot
 ```
 python query_pankmer_bitmap.py \
                 --anchor Saethiopicum \
-                --all-chromosomes
+                --all-chromosomes \
                 --index-dir . \
                 --font-size 20 \
                 --width 600 \
