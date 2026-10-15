@@ -11,7 +11,46 @@ By the end of this exercise, you should be able to:
 * Compare patterns between two species.
 * Identify genomic regions that could be candidates for introgression.
 
-## 1. Download and prepare the data
+
+## 1.5 How the data/pangenome was made
+
+To facilitate a smooth and fast practical, I have already run a set of *S. aethiopicum* genomes plus 1 *S. anguivi* genome through Panagram. [**Panagram**](https://github.com/kjenike/panagram)
+
+If you really, really want to run through everything on your own you can download the data here. 
+
+The first step of Panagram to build a samples.tsv file that lists all of the fasta files that you want to include in your pangenome. For this example, the samples file looks like this: 
+
+```
+name    fasta   gff     id      anchor
+Saethiopicum    FASTAS/Saethiopicum_edited.fasta                0       True
+Solaet1371      FASTAS/Solaet1371_edited.fasta          1       True
+Solaetbc2060    FASTAS/Solaetbc2060_edited.fasta                2       True
+Solaetbc2063    FASTAS/Solaetbc2063_edited.fasta                3       True
+Solaetbc2066    FASTAS/Solaetbc2066_edited.fasta                4       True
+Solaetbc2072    FASTAS/Solaetbc2072_edited.fasta                5       True
+Solaetbc2073    FASTAS/Solaetbc2073_edited.fasta                6       True
+Solaetbc2074    FASTAS/Solaetbc2074_edited.fasta                7       True
+SolaetSC103     FASTAS/SolaetSC103_edited.fasta         8       True
+SolaetSID104435 FASTAS/SolaetSID104435_edited.fasta             9       True
+SolaetSID104440 FASTAS/SolaetSID104440_edited.fasta             10      True
+Solang8 FASTAS/Solang8_edited.fasta             11      True
+```
+
+Then you prepare the data with this command:
+
+```
+panagram index samples.tsv -k 31 --prepare
+```
+
+Notice that for this dataset we are using k=31. The time and disk space requirements will change based on k. Also note that this step may take some time if the fasta files are not yet indexed. Once an *.fai file has been generated once Panagram won't need to make that again and the --prepare step will be faster. 
+
+The next step is to run the indexing, which uses snakemake. 
+
+```
+snakemake --cores 12 all
+```
+
+## 1. Download the data
 
 First, download the practical data archive:
 
