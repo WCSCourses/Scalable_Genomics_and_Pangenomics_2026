@@ -29,7 +29,7 @@ Navigate into the extracted directory:
 cd introgression_practical
 ```
 
-Take a moment to explore the contents of the directory.
+Make sure the data is there! Do you see a directory called "anchor"? 
 
 ## 2. Explore the query script
 
@@ -57,6 +57,21 @@ We will first examine the pan-k-mer bitmap for *Solanum aethiopicum*.
 
 Using the options you discovered in the previous section, run the script to plot the bitmap for **all chromosomes of *S. aethiopicum***.
 
+<details>
+<summary>The command I would recommend</summary>
+
+python query_cleaned.py \
+                --anchor Saethiopicum \
+                --all-chromosomes
+                --index-dir . \
+                --font-size 20 \
+                --width 600 \
+                --height 400 \
+                --png-scale 2 \
+                --formats png
+
+</details>
+
 Inspect the resulting plots.
 
 **Questions to consider:**
@@ -64,8 +79,7 @@ Inspect the resulting plots.
 * What patterns do you observe across the chromosomes?
 * Are there regions with noticeably different patterns from their surroundings?
 * Do any chromosomes contain unusual or unexpected regions?
-
-Record any interesting observations.
+* What is the difference between multiplicity and containment?
 
 ## 4. Visualise *Solanum anguivi*
 
@@ -75,11 +89,26 @@ Run the script to plot the bitmap for **all chromosomes of *S. anguivi***.
 
 Inspect the resulting plots and note any similarities or differences compared with *S. aethiopicum*.
 
+<details>
+<summary>The command I would recommend</summary>
+
+python query_cleaned.py \
+                --anchor Solang8 \
+                --all-chromosomes
+                --index-dir . \
+                --font-size 20 \
+                --width 600 \
+                --height 400 \
+                --png-scale 2 \
+                --formats png
+
+</details>
+
 **Questions to consider:**
 
 * How do the bitmap patterns compare between the two species?
 * Are there regions that appear similar in one species but different in the other?
-* Do any patterns suggest that particular genomic regions may have a different evolutionary history?
+* Do any patterns suggest that particular genomic regions may have a different or unexpected evolutionary history?
 
 ## 5. Identify candidate introgressions
 
@@ -97,7 +126,7 @@ For each candidate region, record:
 * **Evidence:** What pattern makes the region interesting?
 * **Interpretation:** Why might this region be a candidate for introgression?
 
-Remember that **an unusual bitmap pattern is a clue, not proof of introgression**. Further analyses and independent evidence would be needed to confirm the evolutionary origin of a region.
+Remember that **an unusual bitmap pattern is a clue, not proof of introgression**. 
 
 ## 6. Discussion
 
