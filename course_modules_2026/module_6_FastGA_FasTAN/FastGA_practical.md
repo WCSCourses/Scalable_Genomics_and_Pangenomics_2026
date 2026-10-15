@@ -355,7 +355,7 @@ awk '{n[$4] += $3-$2} END {for (u in n) print n[u], u}' col0-tan.bed | sort -nr 
 Now run `tancons` with its default settings. This builds a consensus sequence for each tandem repeat array that has more than 100 copies of exactly the unit length, using the parse in the `.1ano` file:
 
 ```bash
-tancons col0-tan > col0-tan-cons.fa
+tancons col0-tan.1ano > col0-tan-cons.fa
 grep -c '>' col0-tan-cons.fa
 grep '>' col0-tan-cons.fa | less
 ```
